@@ -18,3 +18,5 @@ cur.execute("INSERT INTO posts (title, content) VALUES (?, ?)",
 
 connection.commit()
 connection.close()
+
+print("all OK")
