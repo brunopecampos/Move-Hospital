@@ -1,0 +1,41 @@
+Entidades:
+
+1) Hospital:
+	- 
+
+2) Empresa:
+	-
+
+3) 
+
+Telas:
+
+São 15 no total:
+
+Tela de Login/Registro (2 telas): Ambos, hospital e empresa de ambulância, devem ser capazes de se registrar e fazer login na plataforma.
+
+Página Inicial do Hospital: Após o login, o hospital deve ser direcionado para uma página inicial que mostra uma visão geral das solicitações pendentes, solicitações aceitas e solicitações concluídas.
+
+Página Inicial da Empresa de Ambulância: Similarmente, após o login, a empresa de ambulância deve ser direcionada para uma página inicial que mostra uma visão geral das solicitações recebidas, propostas enviadas e serviços concluídos.
+
+Tela de Solicitação de Serviço de Ambulância: Os hospitais precisam de uma tela para solicitar serviços de ambulância, fornecendo todos os detalhes necessários.
+
+Tela de Visualização de Solicitações de Serviço: As empresas de ambulância precisam de uma tela para ver todas as solicitações de serviços disponíveis.
+
+Tela de Proposta de Serviço: As empresas de ambulância precisam de uma tela para enviar propostas de serviço em resposta às solicitações dos hospitais.
+
+Tela de Aceitação de Proposta de Serviço: Os hospitais precisam de uma tela para aceitar as propostas de serviços enviadas pelas empresas de ambulância.
+
+Tela de Perfil de Usuário: Ambos, hospital e empresa de ambulância, precisam de uma tela para visualizar e editar seu perfil e configurações de conta.
+
+Tela de Detalhes da Frota: As empresas de ambulância precisam de uma tela para adicionar e atualizar detalhes da sua frota.
+
+Tela de Visualização de Detalhes da Frota: Os hospitais precisam de uma tela para visualizar os detalhes da frota das empresas de ambulância.
+
+Tela de Rastreamento de Ambulâncias: Os hospitais precisam de uma tela para acompanhar a localização da ambulância em tempo real.
+
+Tela de Feedback e Avaliação: Os hospitais precisam de uma tela para avaliar a empresa de ambulância após a conclusão do serviço. As empresas de ambulância também precisam de uma tela para visualizar o feedback recebido.
+
+Tela de Histórico de Serviços: Ambos, hospital e empresa de ambulância, precisam de uma tela para visualizar o histórico de todos os serviços de ambulância solicitados/fornecidos.
+
+Tela de Exportação de Dados: Ambos, hospital e empresa de ambulância, precisam de uma tela para exportar os detalhes dos serviços solicitados/fornecidos.
