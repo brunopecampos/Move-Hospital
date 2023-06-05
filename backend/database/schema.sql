@@ -8,7 +8,7 @@ CREATE TABLE hospital(
     address TEXT NOT NULL,
     email TEXT UNIQUE NOT NULL,
     password TEXT NOT NULL
-)
+);
 
 CREATE TABLE patient(
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -18,7 +18,7 @@ CREATE TABLE patient(
     clinical_condition TEXT NOT NULL,
     phone TEXT NOT NULL,
     observations TEXT NOT NULL
-)
+);
 
 CREATE TABLE request(
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -34,7 +34,7 @@ CREATE TABLE request(
     hospital_id INTEGER NOT NULL,
     patient_id INTEGER NOT NULL,
     offer_id INTEGER
-)
+);
 
 CREATE TABLE posts (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
