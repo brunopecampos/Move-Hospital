@@ -16,7 +16,6 @@ CREATE TABLE hospital(
     password TEXT NOT NULL
 );
 
-
 CREATE TABLE patient(
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     name TEXT NOT NULL,
@@ -26,7 +25,7 @@ CREATE TABLE patient(
     phone TEXT NOT NULL,
     observations TEXT NOT NULL
 );
-    
+
 CREATE TABLE request(
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     description TEXT NOT NULL,
