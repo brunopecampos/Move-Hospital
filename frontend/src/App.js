@@ -25,7 +25,7 @@ function App() {
           onClick={fetchApi}
           style={{
             fontSize: 30,
-            backgroundColor: "lightblue",
+            backgroundColor: "#504DA6",
             borderRadius: 5,
           }}
         >
