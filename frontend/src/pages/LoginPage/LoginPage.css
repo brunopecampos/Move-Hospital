@@ -1,0 +1,17 @@
+.page {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #504DA6;
+}
+
+.login-container {
+    width: 30%;
+}
+
+.login-input {
+    background-color: 'white';
+    border-radius: '8px'
+}
