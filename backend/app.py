@@ -1,6 +1,6 @@
 import os
 import sqlite3
-from flask import Flask, request, render_template
+from flask import Flask, jsonify, redirect, request, render_template, session, url_for
 from flask_sqlalchemy import SQLAlchemy
 from flask_marshmallow import Marshmallow
 
@@ -10,9 +10,11 @@ app = Flask(__name__)
 
 basedir = os.path. abspath(os.path.dirname(__file__))
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(basedir, 'database/database.db')
+app.config['SECRET_KEY'] = '78e36c5a25734464e6d890cc3c4e61ed5474eba0ed576900346362d7ee841176'
 
 db.init_app(app)
 ma.init_app(app)
+
 
 def get_db_connection():
     conn = sqlite3.connect('database/database.db')
@@ -50,3 +52,23 @@ def create_hospital():
 	db.session.commit()
 
 	return HospitalSchema().jsonify(hospital)
+
+@app.route('/login/', methods=['POST'])
+def login_user():
+	email = request.json.get('email')
+	password = request.json.get('password')
+
+	user = Hospital.query.filter_by(email=email).first()
+
+	if user is None:
+		return redirect(url_for('index'))
+
+	if not user.password == password:
+		return jsonify({"error": "Unauthorized"}), 401
+    
+	session["user_id"] = user.id
+
+	return jsonify({
+		"id": user.id,
+		"email": user.email
+	})
