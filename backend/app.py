@@ -29,8 +29,19 @@ def get_current_user():
         "email": user.email
     }) 
 
-def add_user(user, new_user):
-    user_exists = user.query.filter_by(email=new_user.email).first() is not None
+
+def register_user(request, user_type):
+    name = request.json["name"]
+    cnpj = request.json["cnpj"]
+    employee_name = request.json["employee_name"]
+    address = request.json["address"]
+    email = request.json["email"]
+    password = request.json["password"]
+
+    hashed_password = bcrypt.generate_password_hash(password)
+    new_user = user_type(name=name, cnpj=cnpj, employee_name=employee_name, address=address, email=email, password=hashed_password)
+
+    user_exists = user_type.query.filter_by(email=new_user.email).first() is not None
 
     if user_exists:
         return jsonify({"error": "User already exists"}), 409
@@ -43,40 +54,20 @@ def add_user(user, new_user):
     return jsonify({
         "id": new_user.id,
     })
-    
 
 @app.route("/register-hospital", methods=["POST"])
 def register_hospital():
-    name = request.json["name"]
-    cnpj = request.json["cnpj"]
-    employee_name = request.json["employee_name"]
-    address = request.json["address"]
-    email = request.json["email"]
-    password = request.json["password"]
-
-    hashed_password = bcrypt.generate_password_hash(password)
-    new_hospital = Hospital(name=name, cnpj=cnpj, employee_name=employee_name, address=address, email=email, password=hashed_password)
-    return add_user(Hospital, new_hospital)
+    return register_user(request, Hospital)
 
 @app.route("/register-provider", methods=["POST"])
 def register_provider():
-    name = request.json["name"]
-    cnpj = request.json["cnpj"]
-    employee_name = request.json["employee_name"]
-    address = request.json["address"]
+    return register_user(request, Provider)
+
+def login_user(request, user_type):
     email = request.json["email"]
     password = request.json["password"]
 
-    hashed_password = bcrypt.generate_password_hash(password)
-    new_provider = Provider(name=name, cnpj=cnpj, employee_name=employee_name, address=address, email=email, password=hashed_password)
-    return add_user(Provider, new_provider)
-
-@app.route("/login", methods=["POST"])
-def login_user():
-    email = request.json["email"]
-    password = request.json["password"]
-
-    user = User.query.filter_by(email=email).first()
+    user = user_type.query.filter_by(email=email).first()
 
     if user is None:
         return jsonify({"error": "Unauthorized"}), 401
@@ -91,10 +82,19 @@ def login_user():
         "email": user.email
     })
 
-@app.route("/logout", methods=["POST"])
-def logout_user():
+
+@app.route("/login-hospital", methods=["POST"])
+def login_hospital():
+    return login_user(request, Hospital)
+
+@app.route("/login-provider", methods=["POST"])
+def login_provider():
+    return login_user(request, Provider)
+
+@app.route("/logout-ambulance", methods=["POST"])
+def logout_ambulance():
     session.pop("user_id")
     return "200"
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(debug=True, host="0.0.0.0")
