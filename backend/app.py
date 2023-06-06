@@ -1,74 +1,84 @@
-import os
-import sqlite3
-from flask import Flask, jsonify, redirect, request, render_template, session, url_for
-from flask_sqlalchemy import SQLAlchemy
-from flask_marshmallow import Marshmallow
-
-from database.models import *
+from flask import Flask, request, jsonify, session
+from flask_bcrypt import Bcrypt
+from flask_cors import CORS, cross_origin
+from flask_session import Session
+from config import ApplicationConfig
+from models import db, User
 
 app = Flask(__name__)
+app.config.from_object(ApplicationConfig)
 
-basedir = os.path. abspath(os.path.dirname(__file__))
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(basedir, 'database/database.db')
-app.config['SECRET_KEY'] = '78e36c5a25734464e6d890cc3c4e61ed5474eba0ed576900346362d7ee841176'
-
+bcrypt = Bcrypt(app)
+CORS(app, supports_credentials=True)
+server_session = Session(app)
 db.init_app(app)
-ma.init_app(app)
 
+with app.app_context():
+    db.create_all()
 
-def get_db_connection():
-    conn = sqlite3.connect('database/database.db')
-    conn.row_factory = sqlite3.Row
-    return conn
+@app.route("/@me")
+def get_current_user():
+    user_id = session.get("user_id")
 
-@app.route('/')
-def index():
-    return "Welcome to Move Hospital!"
-
-@app.route('/patient/')
-def get_patient():
-	patients = Patient.query.all()
-
-	return PatientSchema(many=True).jsonify(patients)
-
-@app.route('/hospital/', methods=['GET'])
-def get_hospitals():
-	hospitals = Hospital.query.all()
-
-	return HospitalSchema(many=True).jsonify(hospitals)	
-
-@app.route('/hospital/', methods=['POST'])
-def create_hospital():
-	name = request.json.get('name')
-	cnpj = request.json.get('cnpj')
-	employee_name = request.json.get('employee_name')
-	address = request.json.get('address')
-	email = request.json.get('email')
-	password = request.json.get('password')
-
-	hospital = Hospital(name, cnpj, employee_name, address, email, password)
-
-	db.session.add(hospital)
-	db.session.commit()
-
-	return HospitalSchema().jsonify(hospital)
-
-@app.route('/login/', methods=['POST'])
-def login_user():
-	email = request.json.get('email')
-	password = request.json.get('password')
-
-	user = Hospital.query.filter_by(email=email).first()
-
-	if user is None:
-		return redirect(url_for('index'))
-
-	if not user.password == password:
-		return jsonify({"error": "Unauthorized"}), 401
+    if not user_id:
+        return jsonify({"error": "Unauthorized"}), 401
     
-	session["user_id"] = user.id
+    user = User.query.filter_by(id=user_id).first()
+    return jsonify({
+        "id": user.id,
+        "email": user.email
+    }) 
 
-	return jsonify({
-		"id": user.id,
-		"email": user.email
-	})
+@app.route("/register", methods=["POST"])
+def register_user():
+    #name = request.json["name"]
+    #cpnj = request.json["cnpj"]
+    #employee_name = request.json["employee_name"]
+    #address = request.json["address"]
+    email = request.json["email"]
+    password = request.json["password"]
+
+    user_exists = er.query.filter_by(email=email).first() is not None
+
+    if user_exists:
+        return jsonify({"error": "User already exists"}), 409
+
+    hashed_password = bcrypt.generate_password_hash(password)
+    new_user = User(email=email, password=hashed_password)
+    db.session.add(new_user)
+    db.session.commit()
+    
+    session["user_id"] = new_user.id
+
+    return jsonify({
+        "id": new_user.id,
+        "email": new_user.email
+    })
+
+@app.route("/login", methods=["POST"])
+def login_user():
+    email = request.json["email"]
+    password = request.json["password"]
+
+    user = User.query.filter_by(email=email).first()
+
+    if user is None:
+        return jsonify({"error": "Unauthorized"}), 401
+
+    if not bcrypt.check_password_hash(user.password, password):
+        return jsonify({"error": "Unauthorized"}), 401
+    
+    session["user_id"] = user.id
+
+    return jsonify({
+        "id": user.id,
+        "email": user.email
+    })
+
+@app.route("/logout", methods=["POST"])
+def logout_user():
+    session.pop("user_id")
+    return "200"
+
+if __name__ == "__main__":
+    app.run(debug=True)
