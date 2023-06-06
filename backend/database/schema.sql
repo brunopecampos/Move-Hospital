@@ -1,3 +1,6 @@
+DROP TABLE IF EXISTS hospital;
+DROP TABLE IF EXISTS patient;
+DROP TABLE IF EXISTS request;
 DROP TABLE IF EXISTS posts;
 
 CREATE TABLE hospital(
@@ -30,7 +33,7 @@ CREATE TABLE request(
     transference_time TIMESTAMP NOT NULL,
     destination_address TEXT NOT NULL,
     destination_name TEXT NOT NULL,
-    status TEXT CHECK (name IN ('created', 'offer_accepted', 'started', 'passanger_on_board', 'finished')) NOT NULL DEFAULT 'created',
+    status TEXT CHECK (status IN ('created', 'offer_accepted', 'started', 'passanger_on_board', 'finished')) NOT NULL DEFAULT 'created',
     hospital_id INTEGER NOT NULL,
     patient_id INTEGER NOT NULL,
     offer_id INTEGER
