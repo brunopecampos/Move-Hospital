@@ -3,12 +3,13 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    height: 100vh;
     background-color: #504DA6;
+    padding: 10%;
 }
 
 .login-container {
     width: 30%;
+    align-items: center;
 }
 
 .login-input {
