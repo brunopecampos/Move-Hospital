@@ -16,19 +16,25 @@ db.init_app(app)
 with app.app_context():
     db.create_all()
 
-@app.route("/@me")
-def get_current_user():
-    user_id = session.get("user_id")
+# Helper funcions -> put in another file
 
-    if not user_id:
-        return jsonify({"error": "Unauthorized"}), 401
-    
-    user = User.query.filter_by(id=user_id).first()
-    return jsonify({
-        "id": user.id,
-        "email": user.email
-    }) 
+def user_type_from_obj(obj):
+    if obj == Hospital:
+        return "hospital"
+    return "provider"
 
+def user_type_from_str(user_str):
+    if user_str == "hospital": 
+        return Hospital
+    return Provider
+
+def set_session(id, user_type):
+    session["user_id"] = id
+    server_session["user_type"] = user_type_from_obj(user_type)
+
+def clear_session():
+    session.pop("user_id")
+    session.pop("user_type")
 
 def register_user(request, user_type):
     name = request.json["name"]
@@ -49,19 +55,11 @@ def register_user(request, user_type):
     db.session.add(new_user)
     db.session.commit()
 
-    session["user_id"] = new_user.id
+    set_session(new_user.id, user_type)
 
     return jsonify({
         "id": new_user.id,
     })
-
-@app.route("/register-hospital", methods=["POST"])
-def register_hospital():
-    return register_user(request, Hospital)
-
-@app.route("/register-provider", methods=["POST"])
-def register_provider():
-    return register_user(request, Provider)
 
 def login_user(request, user_type):
     email = request.json["email"]
@@ -75,13 +73,36 @@ def login_user(request, user_type):
     if not bcrypt.check_password_hash(user.password, password):
         return jsonify({"error": "Unauthorized"}), 401
     
-    session["user_id"] = user.id
+    set_session(user.id, user_type)
 
     return jsonify({
         "id": user.id,
         "email": user.email
     })
 
+@app.route("/@me")
+def get_current_user():
+    user_id = session.get("user_id")
+
+    if not user_id:
+        return jsonify({"error": "Unauthorized"}), 401
+    
+    user_type = session.get("user")
+    user_obj = user_type_from_str(user_type)
+    user = user_obj.query.filter_by(id=user_id).first()
+    return jsonify({
+        "id": user.id,
+        "email": user.email,
+        "user_type": user_type
+    }) 
+
+@app.route("/register-hospital", methods=["POST"])
+def register_hospital():
+    return register_user(request, Hospital)
+
+@app.route("/register-provider", methods=["POST"])
+def register_provider():
+    return register_user(request, Provider)
 
 @app.route("/login-hospital", methods=["POST"])
 def login_hospital():
@@ -91,9 +112,9 @@ def login_hospital():
 def login_provider():
     return login_user(request, Provider)
 
-@app.route("/logout-ambulance", methods=["POST"])
+@app.route("/logout", methods=["POST"])
 def logout_ambulance():
-    session.pop("user_id")
+    clear_session()
     return "200"
 
 if __name__ == "__main__":
