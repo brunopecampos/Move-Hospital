@@ -2,7 +2,8 @@ import React, { useState } from "react";
 import httpClient from "../../httpClient";
 import "./LoginPage.css";
 import loginImage from "../../images/login-logo.png"
-import { TextField, Button } from '@material-ui/core';
+import TextField from '@mui/material/TextField';
+import Button from '@mui/material/Button';
 
 const LoginPage: React.FC = () => {
   const [isHospital, setIsHospital] = useState<boolean>(true);

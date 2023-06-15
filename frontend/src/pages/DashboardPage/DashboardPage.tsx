@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import httpClient from "../../httpClient";
 import { User } from "../../types";
 import { useNavigate } from "react-router-dom";
+import VerticalTabs from "../../components/TabBar/TabBar"
 
 const DashboardPage: React.FC = () => {
   const [user, setUser] = useState<User | null>(null);
@@ -24,6 +25,10 @@ const DashboardPage: React.FC = () => {
     })();
   }, []);
 
+  return VerticalTabs()
+  
+
+    /*
   return (
     <div>
       <h1>Welcome to this React Application</h1>
@@ -35,13 +40,14 @@ const DashboardPage: React.FC = () => {
           <h3>User Type: {user.user_type}</h3>
 
           <button onClick={logoutUser}>Logout</button>
+          <>{VerticalTabs()}</>
         </div>
       ) : (
         <>
         </>
       )}
     </div>
-  );
+  );*/
 };
 
 export default DashboardPage;
