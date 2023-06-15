@@ -29,8 +29,9 @@ def user_type_from_str(user_str):
     return Provider
 
 def set_session(id, user_type):
+    #print(f"new session: {id} {user_type_from_obj(user_type)}")
     session["user_id"] = id
-    server_session["user_type"] = user_type_from_obj(user_type)
+    session["user_type"] = user_type_from_obj(user_type)
 
 def clear_session():
     session.pop("user_id")
@@ -87,7 +88,7 @@ def get_current_user():
     if not user_id:
         return jsonify({"error": "Unauthorized"}), 401
     
-    user_type = session.get("user")
+    user_type = session.get("user_type")
     user_obj = user_type_from_str(user_type)
     user = user_obj.query.filter_by(id=user_id).first()
     return jsonify({

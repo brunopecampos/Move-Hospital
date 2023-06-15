@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from "react";
 import httpClient from "../../httpClient";
 import { User } from "../../types";
+import { useNavigate } from "react-router-dom";
 
-const LandingPage: React.FC = () => {
+const DashboardPage: React.FC = () => {
   const [user, setUser] = useState<User | null>(null);
+  const navigate = useNavigate()
 
   const logoutUser = async () => {
     await httpClient.post("//localhost:5000/logout");
@@ -17,6 +19,7 @@ const LandingPage: React.FC = () => {
         setUser(resp.data);
       } catch (error) {
         console.log("Not authenticated");
+        navigate("/login")
       }
     })();
   }, []);
@@ -29,24 +32,16 @@ const LandingPage: React.FC = () => {
           <h2>Logged in</h2>
           <h3>ID: {user.id}</h3>
           <h3>Email: {user.email}</h3>
+          <h3>User Type: {user.user_type}</h3>
 
           <button onClick={logoutUser}>Logout</button>
         </div>
       ) : (
-        <div>
-          <p>You are not logged in</p>
-          <div>
-            <a href="/login">
-              <button>Login</button>
-            </a>
-            <a href="/register">
-              <button>Register</button>
-            </a>
-          </div>
-        </div>
+        <>
+        </>
       )}
     </div>
   );
 };
 
-export default LandingPage;
+export default DashboardPage;
