@@ -1317,6 +1317,11 @@
     minimatch "^3.0.4"
     strip-json-comments "^3.1.1"
 
+"@fontsource/poppins@^5.0.3":
+  version "5.0.3"
+  resolved "https://registry.yarnpkg.com/@fontsource/poppins/-/poppins-5.0.3.tgz#f4afa9aa5f491731decee76111c9b9622a9b7924"
+  integrity sha512-5lL2vmvmh4zbknTh1nVH9pTWyhYqAlYMHIAnkNhqo5qwMZGlr+coM1dtMwiQHRBgmHAl3ZvJ35Bj0s8cpmXZbg==
+
 "@hapi/address@2.x.x":
   version "2.1.4"
   resolved "https://registry.yarnpkg.com/@hapi/address/-/address-2.1.4.tgz#5d67ed43f3fd41a69d4b9ff7b56e7c0d1d0a81e5"
