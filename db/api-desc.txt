@@ -1,0 +1,36 @@
+Telas Hospital:
+
+Tela 3: Página inicial)
+	GET: /hospital/{hospitalId}/request/created
+	GET: /hospital/{hospitalId}/request/ongoing
+	GET: /hospital/{hospitalId}/request/concluded
+
+Tela 4: Solicitação)
+	POST: /hospital/{hospitalId}/request/
+Tela 5: Propostas)
+	PATCH /hospital/{hospitalId}/request/{requestId}/approve
+
+Tela 6: Não precisa de novas
+
+Tela 7: 
+	GET: /hospital/{hospitalId}
+
+Telas Empresas:
+
+Tela 3: Página inicial)
+	GET: /offer/created
+	GET: /provider/{providerId}/offer/scheduled
+	GET: /provider/{providerId}/offer/ongoing
+	GET: /provider/{providerId}/offer/concluded
+
+Tela 4: Envio de Proposta)
+	POST: /provider/{providerId}/offer
+
+Tela 5: Minha Frota)
+	GET: /provider/{providerId}/ambulance
+
+Tela 6: Minha Frota Cadastro)
+	POST /provider/{providerId}/ambulance
+
+Tela 7: Meu Perfil)
+	GET /provider/{providerId}
