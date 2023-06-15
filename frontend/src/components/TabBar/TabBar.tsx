@@ -4,6 +4,8 @@ import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
+import { OngoingRequests } from '../OngoingRequests/OngoingRequests';
+import { User } from '../../types';
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -38,7 +40,7 @@ function a11yProps(index: number) {
   };
 }
 
-export default function VerticalTabs() {
+export default function VerticalTabs(user: User | null) {
   const [value, setValue] = React.useState(1);
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
@@ -65,10 +67,14 @@ export default function VerticalTabs() {
       </Tabs>
       <TabPanel value={value} index={0}></TabPanel>
       <TabPanel value={value} index={1}>
-        Item One
+        {
+          user ?
+          <OngoingRequests user={user} />
+          : <></>
+        }
       </TabPanel>
       <TabPanel value={value} index={2}>
-        Item Two
+        Tab 2
       </TabPanel>
       <TabPanel value={value} index={3}>
         Item Three

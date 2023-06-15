@@ -25,29 +25,7 @@ const DashboardPage: React.FC = () => {
     })();
   }, []);
 
-  return VerticalTabs()
-  
-
-    /*
-  return (
-    <div>
-      <h1>Welcome to this React Application</h1>
-      {user != null ? (
-        <div>
-          <h2>Logged in</h2>
-          <h3>ID: {user.id}</h3>
-          <h3>Email: {user.email}</h3>
-          <h3>User Type: {user.user_type}</h3>
-
-          <button onClick={logoutUser}>Logout</button>
-          <>{VerticalTabs()}</>
-        </div>
-      ) : (
-        <>
-        </>
-      )}
-    </div>
-  );*/
+  return VerticalTabs(user)
 };
 
 export default DashboardPage;
