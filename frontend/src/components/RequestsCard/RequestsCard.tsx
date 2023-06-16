@@ -5,12 +5,7 @@ import Box from '@mui/material/Box';
 import { Button, Container, Stack, Card } from '@mui/material';
 import { ThemeContext } from '@emotion/react';
 import { SimpleRequest } from '../SimpleRequest/SimpleRequest';
-
-export interface RequestsCardProps {
-  user: User,
-  header?: boolean
-  type: string
-}
+import { DashboardHeader } from '../DashboardHeader/DashboardHeader';
 
 const hResquests: Request[] = [{
     id: "aaa",
@@ -56,12 +51,17 @@ const hResquests: Request[] = [{
 }
 ]
 
+export interface RequestsCardProps {
+  user: User,
+  header?: boolean
+  type: string
+}
 
 export const RequestsCard = (props: RequestsCardProps): React.ReactElement => {
   const [requests, setRequests] = useState<Request[]>(hResquests)
 
   const createUrl = (user: User) => {
-    return "//localhost:5000/" + user.user_type + "/resquest/ongoing"
+    return "//localhost:5000/" + user.user_type + props.type
   }
 
   useEffect(() => {
@@ -83,10 +83,6 @@ export const RequestsCard = (props: RequestsCardProps): React.ReactElement => {
     </>
   ))  
 
-  const createRequest = () => {
-    
-  }
-
   return (
     <Box sx={{
       padding: "50px",
@@ -94,12 +90,7 @@ export const RequestsCard = (props: RequestsCardProps): React.ReactElement => {
       <Container>
         {
           props.header ?
-            <>
-              <Stack direction="row" spacing={60} height={100}>
-               <h1>Olá {props.user.email}</h1>
-               <Button variant="contained" onClick={() => createRequest()}>Nova solicitação</Button>
-              </Stack> 
-            </>
+            <DashboardHeader username={props.user.email} />
           : <></>
         }
         <Card elevation={3}  sx={{
