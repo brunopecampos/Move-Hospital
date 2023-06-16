@@ -4,7 +4,7 @@ import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
-import { OngoingRequests } from '../OngoingRequests/OngoingRequests';
+import { RequestsCard } from '../RequestsCard/RequestsCard';
 import { User } from '../../types';
 
 interface TabPanelProps {
@@ -49,7 +49,7 @@ export default function VerticalTabs(user: User | null) {
 
   return (
     <Box
-      sx={{ flexGrow: 1, bgcolor: 'background.paper', display: 'flex', height: "100vh"}}
+      sx={{ flexGrow: 1, bgcolor: '#F5F5F5', display: 'flex'}}
     >
       <Tabs
         orientation="vertical"
@@ -61,24 +61,45 @@ export default function VerticalTabs(user: User | null) {
         sx={{ borderRight: 1, borderColor: 'divider', backgroundColor: '#504DA6', fontSize: "30px"}}
       >
         <img src={loginImage} alt="Description of the image" style={{width: "80%", alignSelf: 'center'}}/>
-        <Tab label="Página INicial" {...a11yProps(1)} />
-        <Tab label="Meu Perfil" {...a11yProps(2)} />
-        <Tab label="Sair" {...a11yProps(3)} />
+        <Tab label="Transferências em Andamento" {...a11yProps(1)} />
+        <Tab label="Transferências Agendadas" {...a11yProps(2)} />
+        <Tab label="Transferências Criadas" {...a11yProps(3)} />
+        <Tab label="Transferências Finalizdas" {...a11yProps(4)} />
+        <Tab label="Meu Perfil" {...a11yProps(5)} />
+        <Tab label="Sair" {...a11yProps(6)} />
       </Tabs>
-      <TabPanel value={value} index={0}></TabPanel>
+      <TabPanel  value={value} index={0}></TabPanel>
       <TabPanel value={value} index={1}>
+
         {
           user ?
-          <OngoingRequests user={user} />
+          <RequestsCard header user={user} type="ongoing" />
           : <></>
         }
       </TabPanel>
       <TabPanel value={value} index={2}>
-        Tab 2
+        {
+          user ?
+          <RequestsCard user={user} type="scheduled" />
+          : <></>
+        }
       </TabPanel>
       <TabPanel value={value} index={3}>
-        Item Three
+        {
+          user ?
+          <RequestsCard user={user} type="created" />
+          : <></>
+        }
       </TabPanel>
+      <TabPanel value={value} index={4}>
+        {
+          user ?
+          <RequestsCard user={user} type="finished" />
+          : <></>
+        }
+      </TabPanel>
+      <TabPanel value={value} index={5}></TabPanel>
+      <TabPanel value={value} index={6}></TabPanel>
     </Box>
   );
 }
