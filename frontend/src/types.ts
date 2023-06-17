@@ -5,10 +5,11 @@ export interface User {
 }
 
 export interface Request {
-  id: string;
+  id?: string;
   description: string;
   ambulance_type: string;
   responsible_name: string;
+  responsible_phone: string;
   created: Date;
   transference_time: Date;
   destination_address: string;
@@ -20,7 +21,7 @@ export interface Request {
 }
 
 export interface Offer {
-  id: string;
+  id?: string;
   code: string
   price: number | null
   status: "created" | "scheduled" | "ongoing" | "finished"
@@ -30,7 +31,7 @@ export interface Offer {
 }
 
 export interface Patient {
-  id: string;
+  id?: string;
   name: string;
   age: number;
   gender: string;
