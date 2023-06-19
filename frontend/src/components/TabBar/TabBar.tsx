@@ -80,21 +80,21 @@ export default function VerticalTabs(user: User | null) {
       <TabPanel value={value} index={2}>
         {
           user ?
-          <RequestsCard user={user} type="scheduled" />
+          <RequestsCard header user={user} type="scheduled" />
           : <></>
         }
       </TabPanel>
       <TabPanel value={value} index={3}>
         {
           user ?
-          <RequestsCard user={user} type="created" />
+          <RequestsCard header user={user} type="created" />
           : <></>
         }
       </TabPanel>
       <TabPanel value={value} index={4}>
         {
           user ?
-          <RequestsCard user={user} type="finished" />
+          <RequestsCard header user={user} type="finished" />
           : <></>
         }
       </TabPanel>

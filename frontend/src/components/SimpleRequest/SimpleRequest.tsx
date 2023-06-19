@@ -1,9 +1,10 @@
 import React, {useState, useEffect} from 'react';
 import httpClient from '../../httpClient';
-import { Request, User } from '../../types';
+import { Offer, Request, User } from '../../types';
 import Box from '@mui/material/Box';
 import { Button, Container, Stack, Card } from '@mui/material';
 import { ThemeContext } from '@emotion/react';
+import { OfferModal } from '../OfferModal/OfferModal';
 
 export interface SimpleRequestProps {
   request: Request
@@ -18,12 +19,69 @@ export const SimpleRequest = (props: SimpleRequestProps): React.ReactElement =>
     setDetails(!details)
   }
 
+  const [offers, setOffers] = useState<Offer[]> ([
+    {
+        code: "aaaaaa",
+        price: 50.00,
+        status: "created",
+        provider_id: "aaa",
+        driver_id: "aaaa",
+        ambulance_id: "aaaa"
+    },
+    {
+        code: "bbbbbb",
+        price: 100.00,
+        status: "created",
+        provider_id: "aaa",
+        driver_id: "aaaa",
+        ambulance_id: "aaaa"
+    }
+  ])
+
+  const checkNewOffers = () : Offer[] => {
+    /* fazer requisição para checar ofertas */
+    return [
+      {
+          code: "aaaaaa",
+          price: 50.00,
+          status: "created",
+          provider_id: "aaa",
+          driver_id: "aaaa",
+          ambulance_id: "aaaa"
+      },
+      {
+          code: "bbbbbb",
+          price: 100.00,
+          status: "created",
+          provider_id: "aaa",
+          driver_id: "aaaa",
+          ambulance_id: "aaaa"
+      }
+    ]
+  }
+
+  const showOffers = () => {
+    /* fazer requisição para checar ofertas */
+    const offers = checkNewOffers()
+
+  }
+
   return (
     <>
       <Stack direction="row" spacing={5} height={100} alignItems='center'>
-        <RequestTextField title="Tipo de Ambulancia" content={props.request.ambulance_type} />
         <RequestTextField title="Destino" content={props.request.destination_name} />
         <RequestTextField title="Data de Transferência" content={props.request.transference_time.toDateString()} />
+        {
+          props.request.status == "ongoing" ?
+            <RequestTextField title="Estado da Transferência" content={"Indo Buscar Passageiro"} />
+          : props.request.status == "created" ?
+            <>
+              <OfferModal requestId={props.request.id}/>
+            </>
+          :
+            <RequestTextField title="Tipo de Ambulância" content={props.request.ambulance_type} />
+        }
+
         <Container sx={{width: 150}}>
           <Button sx={{height: 40}} variant="contained" onClick={() => requestDetails()}> {details ? "Esconder" : "Detalhes"}</Button>
         </Container>

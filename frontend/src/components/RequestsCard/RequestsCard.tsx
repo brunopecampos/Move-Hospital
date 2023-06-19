@@ -7,6 +7,8 @@ import { ThemeContext } from '@emotion/react';
 import { SimpleRequest } from '../SimpleRequest/SimpleRequest';
 import { DashboardHeader } from '../DashboardHeader/DashboardHeader';
 
+
+
 const hResquests: Request[] = [{
     id: "aaa",
     description: "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
@@ -19,7 +21,8 @@ const hResquests: Request[] = [{
     status: "ongoing",
     hospital_id: "aaaaa",
     patient_id: "aaaaaa",
-    offer_id: "aaaaaa"
+    offer_id: "aaaaaa",
+    responsible_phone: "aaaaaaaaa"
 },
 {
     id: "bbb",
@@ -33,7 +36,8 @@ const hResquests: Request[] = [{
     status: "ongoing",
     hospital_id: "bbbbb",
     patient_id: "bbbbbbb",
-    offer_id: "bbbbbb"
+    offer_id: "bbbbbb",
+    responsible_phone: "bbbbbbbbb"
 },
 {
     id: "bbb",
@@ -44,10 +48,11 @@ const hResquests: Request[] = [{
     transference_time: new Date(),
     destination_address: "rua bbbbbbbbbbb numero bbbbbbb",
     destination_name: "hospital bbbbbbbb",
-    status: "ongoing",
+    status: "created",
     hospital_id: "bbbbb",
     patient_id: "bbbbbbb",
-    offer_id: "bbbbbb"
+    offer_id: "bbbbbb",
+    responsible_phone: "bbbbbbbbb"
 }
 ]
 

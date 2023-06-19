@@ -23,7 +23,7 @@ export interface Request {
 export interface Offer {
   id?: string;
   code: string
-  price: number | null
+  price: number
   status: "created" | "scheduled" | "ongoing" | "finished"
   provider_id: string | null
   driver_id: string | null
