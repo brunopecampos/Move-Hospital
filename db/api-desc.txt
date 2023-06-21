@@ -1,36 +1,280 @@
-Telas Hospital:
-
-Tela 3: Página inicial)
-	GET: /hospital/{hospitalId}/request/created
-	GET: /hospital/{hospitalId}/request/ongoing
-	GET: /hospital/{hospitalId}/request/concluded
-
-Tela 4: Solicitação)
+Hospital:
+	/* Creates a new request */
 	POST: /hospital/{hospitalId}/request/
-Tela 5: Propostas)
-	PATCH /hospital/{hospitalId}/request/{requestId}/approve
+		input: json: {
+			ambulance_type: string,
+			destination_name: string,
+			destination_address: string,
+			description: string,
+			transference_time: datetime,
+			responsible_name: string,
+			responsible_phone: sring
+			patient_name: string,
+			patient_age: string,
+			patient_gender: string,
+			patient_clinical_condition: string,
+			patient_phone: string,
+			patient_observations: string,
+		}
+	
 
-Tela 6: Não precisa de novas
+	/* Gets newly created requests */
+	GET: /hospital/{hospitalId}/request/created
+		output: json: [{
+			ambulance_type: string,
+			destination_name: string,
+			destination_address: string,
+			description: string,
+			transference_time: datetime,
+			created: datetime,
+			responsible_name: string,
+			responsible_phone: sring
+			patient_name: string,
+			patient_age: string,
+			patient_gender: string,
+			patient_clinical_condition: string,
+			patient_phone: string,
+			patient_observations: string,
+		}]
 
-Tela 7: 
-	GET: /hospital/{hospitalId}
+	/* Gets all offers for a specific request */
+	GET: /hospital/{hospitalId}/request/{requestId}/offer
+		output: json [
+			{
+				provider_name: string,
+				price: real,
+				driver_name: string,
+				created: datetime
+			}
+		]
+
+	/* approves an offer */	
+	PATCH /hospital/{hospitalId}/request/{requestId}/offer/{offerId}/approve
+
+	/* Gets the requests that are scheduled (the ones that have an already accepted offer) */
+	GET: /hospital/{hospitalId}/request/scheduled
+		output: json: [{
+			ambulance_type: string,
+			destination_name: string,
+			destination_address: string,
+			description: string,
+			transference_time: datetime,
+			created: datetime
+			responsible_name: string,
+			responsible_phone: string,
+			patient_name: string,
+			patient_age: string,
+			patient_gender: string,
+			patient_clinical_condition: string,
+			patient_phone: string,
+			patient_observations: string,
+			provider_name: string,
+			price: real,
+			driver_name: string,
+			ambulance_model: string,
+			ambulance_license_plate: string
+		}]
+
+	/* Gets the requests that are happening right now */
+	GET: /hospital/{hospitalId}/request/ongoing
+		output: json: [{
+			ambulance_type: string,
+			destination_name: string,
+			destination_address: string,
+			description: string,
+			transference_time: datetime,
+			created: datetime,
+			responsible_name: string,
+			responsible_phone: string,
+			provider_name: string,
+			price: real,
+			driver_name: string,
+			ambulance_model: string,
+			ambulance_license_plate: string,
+			patient_name: string,
+			patient_age: string,
+			patient_gender: string,
+			patient_clinical_condition: string,
+			patient_phone: string,
+			patient_observations: string,
+			status: string	
+		}]
+
+	/* Gets the requests that are that have been concluded */
+	GET: /hospital/{hospitalId}/request/concluded
+		output: json: [{
+			ambulance_type: string,
+			destination_name: string,
+			destination_address: string,
+			description: string,
+			transference_time: datetime,
+			created: datetime,
+			responsible_name: sting,
+			responsible_phone: string
+			patient_name: string,
+			patient_age: string,
+			patient_gender: string,
+			patient_clinical_condition: string,
+			patient_phone: string,
+			patient_observations: string,
+			provider_name: string,
+			price: real,
+			driver: string,
+			ambulance_model: string,
+			ambulance_license_plate: string,
+			avalitaion: real
+		}]
+
+	PATCH /hospital/{hospitalId}/request/{requestId}/rate
+		input: json {
+			rating: real
+		}
+
+	/* get profile information */
+	GET: /hospital/{hospitalId}/profile:
+		output: json: {
+			name: string,
+			cnpj: string,
+			address: string,
+			employee_name: string,
+			email: string
+		}
 
 Telas Empresas:
 
-Tela 3: Página inicial)
-	GET: /offer/created
-	GET: /provider/{providerId}/offer/scheduled
-	GET: /provider/{providerId}/offer/ongoing
-	GET: /provider/{providerId}/offer/concluded
+	/*  crete an ambulance */
+	POST: /provider/{providerId}/ambulance/
+		input: json: {
+			factory_model: string,
+			license_plate: string,
+			ambulance_type: string,
+		}
+	
+	GET: /privider/{providerId}/ambulance
+		output: json: [
+			{
+				factory_model: string,
+				license_plate: string,
+				ambulance_type: string,
+			}
+		]
 
-Tela 4: Envio de Proposta)
-	POST: /provider/{providerId}/offer
+	POST: /provider/{providerId}/driver
+		input: json: {
+			name: string,
+			cpf: string,
+		}
 
-Tela 5: Minha Frota)
-	GET: /provider/{providerId}/ambulance
+	GET: /provider/{providerId}/driver
+		output: json: [
+			{
+				name: string,
+				cpg: stirng
+			}
+		]
 
-Tela 6: Minha Frota Cadastro)
-	POST /provider/{providerId}/ambulance
+	/* Gets all request in the system */
+	GET: /provider/{provider_id}/request/created
+		output: json: [ {
+			ambulance_type: string,
+			destination_name: string,
+			destination_address: string,
+			description: string,
+			transference_time: datetime,
+			patient_age: string,
+			patient_gender: string,
+			patient_clinical_condition: string,
+			patient_observations: string,
+		} ]
 
-Tela 7: Meu Perfil)
-	GET /provider/{providerId}
+	/* creates an offer for a request */
+	POST: /provider/{providerId}/offer/{requestId}
+		input: json: {
+			price: real,
+			ambulance_id: integer,
+			driver_id: 
+		}
+
+	/* gets all requests which have accepted offers made by the provider and are not currently happening */
+	GET: /provider/{providerId}/request/scheduled
+		output: json: [{
+			ambulance_type: string,
+			destination_name: string,
+			destination_address: string,
+			description: string,
+			transference_time: datetime,
+			created: datetime
+			responsible_name: string,
+			responsible_phone: string,
+			patient_name: string,
+			patient_age: string,
+			patient_gender: string,
+			patient_clinical_condition: string,
+			patient_phone: string,
+			patient_observations: string,
+			provider_name: string,
+			price: real,
+			driver_name: string,
+			ambulance_model: string,
+			ambulance_license_plate: string
+		}]
+
+	/* gets all requests which have accepted offers made by the provider and are happening right  now */
+	GET: /provider/{providerId}/requests/ongoing
+		output: [{
+			ambulance_type: string,
+			destination_name: string,
+			destination_address: string,
+			description: string,
+			transference_time: datetime,
+			created: datetime,
+			responsible_name: string,
+			responsible_phone: string,
+			provider_name: string,
+			price: real,
+			driver_name: string,
+			ambulance_model: string,
+			ambulance_license_plate: string,
+			patient_name: string,
+			patient_age: string,
+			patient_gender: string,
+			patient_clinical_condition: string,
+			patient_phone: string,
+			patient_observations: string,
+			status: string	
+		}]
+	
+	/* gets all requests which have accepted offers made by the provider and were concluded */
+	GET: /provider/{providerId}/request/concluded
+		json: [{
+			ambulance_type: string,
+			destination_name: string,
+			destination_address: string,
+			description: string,
+			transference_time: datetime,
+			created: datetime,
+			responsible_name: sting,
+			responsible_phone: string
+			patient_name: string,
+			patient_age: string,
+			patient_gender: string,
+			patient_clinical_condition: string,
+			patient_phone: string,
+			patient_observations: string,
+			provider_name: string,
+			price: real,
+			driver: string,
+			ambulance_model: string,
+			ambulance_license_plate: string,
+			avalitaion: real
+		}]
+
+	/* get profile information */
+	GET: /provider/{providerId}/profile:
+		output: json: {
+			name: string,
+			cnpj: string,
+			address: string,
+			employee_name: string,
+			email: string
+		}
