@@ -220,7 +220,7 @@ Telas Empresas:
 		}]
 
 	/* gets all requests which have accepted offers made by the provider and are happening right  now */
-	GET: /provider/{providerId}/requests/ongoing
+	GET: /provider/{providerId}/request/ongoing
 		output: [{
 			ambulance_type: string,
 			destination_name: string,
@@ -243,6 +243,10 @@ Telas Empresas:
 			patient_observations: string,
 			status: string	
 		}]
+
+	/* Conclude a request */
+	PATCH: /provider/{providerId}/request/{resquestId}/conclude
+
 	
 	/* gets all requests which have accepted offers made by the provider and were concluded */
 	GET: /provider/{providerId}/request/concluded
