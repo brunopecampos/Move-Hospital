@@ -94,7 +94,8 @@ def get_current_user():
     return jsonify({
         "id": user.id,
         "email": user.email,
-        "user_type": user_type
+        "user_type": user_type,
+        "name": user.name
     }) 
 
 @app.route("/register-hospital", methods=["POST"])

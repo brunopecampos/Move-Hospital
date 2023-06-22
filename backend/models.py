@@ -43,9 +43,9 @@ class Request(db.Model):
     destination_address = db.Column(db.Text, nullable=False)
     destination_name = db.Column(db.Text, nullable=False)
     status = db.Column(db.String, nullable=False, default='created')
-    hospital_id = db.Column(db.Integer, db.ForeignKey('hospital.id'), nullable=False)
-    patient_id = db.Column(db.Integer, db.ForeignKey('patient.id'), nullable=False)
-    offer_id = db.Column(db.Integer, db.ForeignKey('offer.id'))
+    hospital_id = db.Column(db.Integer, db.ForeignKey('hospital.id'), nullable=True)
+    patient_id = db.Column(db.Integer, db.ForeignKey('patient.id'), nullable=True)
+    avaliation = db.Column(db.Float, nullable=True)
 
 class Provider(db.Model):
     __tablename__ = 'provider'
@@ -80,13 +80,16 @@ class Offer(db.Model):
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     code = db.Column(db.Text, nullable=False)
-    price = db.Column(db.Float)
-    status = db.Column(db.String, nullable=False)
-    provider_id = db.Column(db.Integer, db.ForeignKey('provider.id'), nullable=False)
-    driver_id = db.Column(db.Integer, db.ForeignKey('driver.id'), nullable=False)
-    ambulance_id = db.Column(db.Integer, db.ForeignKey('ambulance.id'), nullable=False)
+    price = db.Column(db.Float, nullable=False)
+    status = db.Column(db.String, nullable=False, default="created")
+    created = db.Column(db.TIMESTAMP, nullable=False, server_default=db.func.current_timestamp())
+    provider_id = db.Column(db.Integer, db.ForeignKey('provider.id'), nullable=True)
+    driver_id = db.Column(db.Integer, db.ForeignKey('driver.id'), nullable=True)
+    ambulance_id = db.Column(db.Integer, db.ForeignKey('ambulance.id'), nullable=True)
+    request_id = db.Column(db.Integer, db.ForeignKey('request.id'), nullable=True)
 
     provider = db.relationship("Provider", backref="offers")
     driver = db.relationship("Driver", backref="offers")
     ambulance = db.relationship("Ambulance", backref="offers")
+    request = db.relationship("Request", backref="offers")
 

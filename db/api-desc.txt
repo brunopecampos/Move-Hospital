@@ -241,7 +241,7 @@ Telas Empresas:
 			patient_clinical_condition: string,
 			patient_phone: string,
 			patient_observations: string,
-			status: string	
+			status: string	c
 		}]
 
 	/* Conclude a request */
