@@ -5,7 +5,8 @@ import Tab from '@mui/material/Tab';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import { RequestsCard } from '../RequestsCard/RequestsCard';
-import { User } from '../../types';
+import { User, Hospital } from '../../types';
+import { ProfileForm } from '../ProfileForm/Profile';
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -42,9 +43,28 @@ function a11yProps(index: number) {
 
 export default function VerticalTabs(user: User | null) {
   const [value, setValue] = React.useState(1);
+  const [name, setName] = React.useState('');
+  const [cnpj, setCnpj] = React.useState('');
+  const [address, setAddress] = React.useState('');
+  const [email, setEmail] = React.useState('');
+  const [employee_name, setEmployeeName] = React.useState('');
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
+  };
+
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    const hospital: Hospital = {
+      name,
+      cnpj,
+      address,
+      email,
+      employee_name
+    };
+
+    console.log(hospital);
   };
 
   return (
@@ -68,9 +88,8 @@ export default function VerticalTabs(user: User | null) {
         <Tab label="Meu Perfil" {...a11yProps(5)} />
         <Tab label="Sair" {...a11yProps(6)} />
       </Tabs>
-      <TabPanel  value={value} index={0}></TabPanel>
+      <TabPanel value={value} index={0}></TabPanel>
       <TabPanel value={value} index={1}>
-
         {
           user ?
           <RequestsCard header user={user} type="ongoing" />
@@ -98,7 +117,14 @@ export default function VerticalTabs(user: User | null) {
           : <></>
         }
       </TabPanel>
-      <TabPanel value={value} index={5}></TabPanel>
+      <TabPanel value={value} index={5}>
+      {
+          user ?
+          <ProfileForm />
+          : <></>
+        }
+        
+      </TabPanel>
       <TabPanel value={value} index={6}></TabPanel>
     </Box>
   );
