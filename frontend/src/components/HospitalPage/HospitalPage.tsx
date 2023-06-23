@@ -40,7 +40,11 @@ function a11yProps(index: number) {
   };
 }
 
-export default function VerticalTabs(user: User | null) {
+interface HospitalPageProps {
+  user: User | null
+}
+
+const HospitalPage  = (props: HospitalPageProps): React.ReactElement => {
   const [value, setValue] = React.useState(1);
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
@@ -72,34 +76,38 @@ export default function VerticalTabs(user: User | null) {
       <TabPanel value={value} index={1}>
 
         {
-          user ?
-          <RequestsCard header user={user} type="ongoing" />
+          props.user ?
+          <RequestsCard header user={props.user} type="ongoing" />
           : <></>
         }
       </TabPanel>
       <TabPanel value={value} index={2}>
         {
-          user ?
-          <RequestsCard header user={user} type="scheduled" />
+          props.user ?
+          <RequestsCard header user={props.user} type="scheduled" />
           : <></>
         }
       </TabPanel>
       <TabPanel value={value} index={3}>
         {
-          user ?
-          <RequestsCard header user={user} type="created" />
+          props.user ?
+          <RequestsCard header user={props.user} type="created" />
           : <></>
         }
       </TabPanel>
       <TabPanel value={value} index={4}>
         {
-          user ?
-          <RequestsCard header user={user} type="finished" />
+          props.user ?
+          <RequestsCard header user={props.user} type="finished" />
           : <></>
         }
       </TabPanel>
-      <TabPanel value={value} index={5}></TabPanel>
+      <TabPanel value={value} index={5}>
+        <h1>David</h1>
+      </TabPanel>
       <TabPanel value={value} index={6}></TabPanel>
     </Box>
   );
 }
+
+export default HospitalPage;
