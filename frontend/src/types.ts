@@ -39,3 +39,11 @@ export interface Patient {
   phone: string;
   observations: string;
 }
+
+export interface Hospital {
+	name: string,
+	cnpj: string,
+	address: string,
+	employee_name: string,
+	email: string
+}
