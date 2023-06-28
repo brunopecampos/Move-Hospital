@@ -4,7 +4,7 @@ import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
-import { RequestsCard } from '../RequestsCard/RequestsCard';
+import { RequestsTab } from '../RequestsTab/RequestsTab';
 import { User, Hospital } from '../../types';
 import { ProfileForm } from '../ProfileForm/Profile';
 
@@ -41,7 +41,11 @@ function a11yProps(index: number) {
   };
 }
 
-export default function VerticalTabs(user: User | null) {
+interface HospitalDashboardProps {
+  user: User | null
+}
+
+const HospitalDashboard  = (props: HospitalDashboardProps): React.ReactElement => {
   const [value, setValue] = React.useState(1);
   const [name, setName] = React.useState('');
   const [cnpj, setCnpj] = React.useState('');
@@ -91,41 +95,42 @@ export default function VerticalTabs(user: User | null) {
       <TabPanel value={value} index={0}></TabPanel>
       <TabPanel value={value} index={1}>
         {
-          user ?
-          <RequestsCard header user={user} type="ongoing" />
+          props.user ?
+          <RequestsTab header user={props.user} type="ongoing" />
           : <></>
         }
       </TabPanel>
       <TabPanel value={value} index={2}>
         {
-          user ?
-          <RequestsCard header user={user} type="scheduled" />
+          props.user ?
+          <RequestsTab header user={props.user} type="scheduled" />
           : <></>
         }
       </TabPanel>
       <TabPanel value={value} index={3}>
         {
-          user ?
-          <RequestsCard header user={user} type="created" />
+          props.user ?
+          <RequestsTab header user={props.user} type="created" />
           : <></>
         }
       </TabPanel>
       <TabPanel value={value} index={4}>
         {
-          user ?
-          <RequestsCard header user={user} type="finished" />
+          props.user ?
+          <RequestsTab header user={props.user} type="finished" />
           : <></>
         }
       </TabPanel>
       <TabPanel value={value} index={5}>
       {
-          user ?
+          props.user ?
           <ProfileForm />
           : <></>
         }
-        
       </TabPanel>
       <TabPanel value={value} index={6}></TabPanel>
     </Box>
   );
 }
+
+export default HospitalDashboard;

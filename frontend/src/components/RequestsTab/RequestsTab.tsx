@@ -56,13 +56,13 @@ const hResquests: Request[] = [{
 }
 ]
 
-export interface RequestsCardProps {
+export interface RequestsTabProps {
   user: User,
   header?: boolean
   type: string
 }
 
-export const RequestsCard = (props: RequestsCardProps): React.ReactElement => {
+export const RequestsTab = (props: RequestsTabProps): React.ReactElement => {
   const [requests, setRequests] = useState<Request[]>(hResquests)
 
   const createUrl = (user: User) => {

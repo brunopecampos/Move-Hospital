@@ -2,9 +2,9 @@ import React, { useState, useEffect } from "react";
 import httpClient from "../../httpClient";
 import { User } from "../../types";
 import { useNavigate } from "react-router-dom";
-import VerticalTabs from "../../components/TabBar/TabBar"
+import HospitalDashboard  from "../../components/HospitalDashboard/HospitalDashboard"
 
-const DashboardPage: React.FC = () => {
+const HomePage: React.FC = () => {
   const [user, setUser] = useState<User | null>(null);
   const navigate = useNavigate()
 
@@ -25,7 +25,7 @@ const DashboardPage: React.FC = () => {
     })();
   }, []);
 
-  return VerticalTabs(user)
+  return user ? user.user_type == "hospital" ? <HospitalDashboard user={user} /> : <></> : <></>
 };
 
-export default DashboardPage;
+export default HomePage;
