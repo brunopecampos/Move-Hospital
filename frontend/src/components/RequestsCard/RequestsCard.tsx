@@ -90,7 +90,7 @@ export const RequestsCard = (props: RequestsCardProps): React.ReactElement => {
 
   return (
     <Box sx={{
-      padding: "50px",
+      padding: "50px",  minHeight: '100vh' 
     }}>
       <Container>
         {

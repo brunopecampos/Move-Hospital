@@ -1,8 +1,9 @@
 // ProfileForm.tsx
 
 import React, { useState } from 'react';
-import { Typography, TextField, Button, FormGroup } from '@mui/material';
+import { Typography, TextField, Button, FormGroup, Container } from '@mui/material';
 import { Hospital } from '../../types';
+import Box from '@mui/material/Box';
 
 export const ProfileForm: React.FC = () => {
   const [name, setName] = useState('');
@@ -26,7 +27,11 @@ export const ProfileForm: React.FC = () => {
   };
 
   return (
-    <>
+    <Box  sx={{
+      padding: "50px",  minHeight: '100vh' 
+    }}>
+      
+    <Container> 
       <Typography variant="h5" style={{ marginBottom: '20px' }}>Meu perfil</Typography>
       <form onSubmit={handleSubmit}>
         <FormGroup>
@@ -70,6 +75,8 @@ export const ProfileForm: React.FC = () => {
           </Button>
         </FormGroup>
       </form>
-    </>
+    </Container>
+    </Box>
+  
   );
 };
