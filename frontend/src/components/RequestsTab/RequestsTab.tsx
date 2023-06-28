@@ -67,8 +67,8 @@ const hResquests: Request[] = [{
 
 export interface RequestsTabProps {
   user: User,
-  header?: boolean
   type: string
+  hospital?: boolean
 }
 
 export const RequestsTab = (props: RequestsTabProps): React.ReactElement => {
@@ -103,9 +103,9 @@ export const RequestsTab = (props: RequestsTabProps): React.ReactElement => {
     }}>
       <Container>
         {
-          props.header ?
+          props.hospital ?
             <DashboardHeader username={props.user.email} />
-          : <></>
+          : <h1>Novas Solicitações</h1>
         }
         <Card elevation={3}  sx={{
           marginTop: 10,

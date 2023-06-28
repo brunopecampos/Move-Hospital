@@ -8,6 +8,7 @@ import { OfferModal } from '../OfferModal/OfferModal';
 
 export interface SimpleRequestProps {
   request: Request
+  provider?: boolean
 }
 
 export const SimpleRequest = (props: SimpleRequestProps): React.ReactElement => 
@@ -24,7 +25,6 @@ export const SimpleRequest = (props: SimpleRequestProps): React.ReactElement =>
         code: "aaaaaa",
         price: 50.00,
         status: "created",
-        provider_id: "aaa",
         driver_id: "aaaa",
         ambulance_id: "aaaa"
     },
@@ -32,7 +32,6 @@ export const SimpleRequest = (props: SimpleRequestProps): React.ReactElement =>
         code: "bbbbbb",
         price: 100.00,
         status: "created",
-        provider_id: "aaa",
         driver_id: "aaaa",
         ambulance_id: "aaaa"
     }
@@ -45,7 +44,6 @@ export const SimpleRequest = (props: SimpleRequestProps): React.ReactElement =>
           code: "aaaaaa",
           price: 50.00,
           status: "created",
-          provider_id: "aaa",
           driver_id: "aaaa",
           ambulance_id: "aaaa"
       },
@@ -53,7 +51,6 @@ export const SimpleRequest = (props: SimpleRequestProps): React.ReactElement =>
           code: "bbbbbb",
           price: 100.00,
           status: "created",
-          provider_id: "aaa",
           driver_id: "aaaa",
           ambulance_id: "aaaa"
       }
@@ -72,6 +69,9 @@ export const SimpleRequest = (props: SimpleRequestProps): React.ReactElement =>
         <RequestTextField title="Destino" content={props.request.destination_name} />
         <RequestTextField title="Data de Transferência" content={props.request.transference_time.toDateString()} />
         {
+          props.provider ?
+            <></>
+          :
           props.request.status == "ongoing" ?
             <RequestTextField title="Estado da Transferência" content={"Indo Buscar Passageiro"} />
           : props.request.status == "created" ?

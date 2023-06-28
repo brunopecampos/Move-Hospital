@@ -27,7 +27,6 @@ export const SimpleOffer = (props: SimpleOfferProps): React.ReactElement =>
           code: "aaaaaa",
           price: 50.00,
           status: "created",
-          provider_id: "aaa",
           driver_id: "aaaa",
           ambulance_id: "aaaa"
       },
@@ -35,7 +34,6 @@ export const SimpleOffer = (props: SimpleOfferProps): React.ReactElement =>
           code: "bbbbbb",
           price: 100.00,
           status: "created",
-          provider_id: "aaa",
           driver_id: "aaaa",
           ambulance_id: "aaaa"
       }
@@ -67,7 +65,7 @@ export const SimpleOffer = (props: SimpleOfferProps): React.ReactElement =>
   );
 }
 
-const RequestTextField = (props: {title: string, content: string, width?: number}): React.ReactElement => {
+const RequestTextField = (props: {title: string, content: string | undefined, width?: number}): React.ReactElement => {
   return (
     <Container sx={{width: props.width ?? 150}}>
       <p style={{

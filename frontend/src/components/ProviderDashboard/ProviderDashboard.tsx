@@ -41,12 +41,12 @@ function a11yProps(index: number) {
   };
 }
 
-interface HospitalDashboardProps {
-  user: User | null
+interface ProviderDashboardProps {
+  user: User | null;
   logout: () => {};
 }
 
-const HospitalDashboard  = (props: HospitalDashboardProps): React.ReactElement => {
+const ProviderDashboard  = (props: ProviderDashboardProps): React.ReactElement => {
   const [value, setValue] = React.useState(1);
   const [name, setName] = React.useState('');
   const [cnpj, setCnpj] = React.useState('');
@@ -97,28 +97,28 @@ const HospitalDashboard  = (props: HospitalDashboardProps): React.ReactElement =
       <TabPanel value={value} index={1}>
         {
           props.user ?
-          <RequestsTab hospital user={props.user} type="ongoing" />
+          <RequestsTab user={props.user} type="ongoing" />
           : <></>
         }
       </TabPanel>
       <TabPanel value={value} index={2}>
         {
           props.user ?
-          <RequestsTab hospital user={props.user} type="scheduled" />
+          <RequestsTab user={props.user} type="scheduled" />
           : <></>
         }
       </TabPanel>
       <TabPanel value={value} index={3}>
         {
           props.user ?
-          <RequestsTab hospital user={props.user} type="created" />
+          <RequestsTab user={props.user} type="created" />
           : <></>
         }
       </TabPanel>
       <TabPanel value={value} index={4}>
         {
           props.user ?
-          <RequestsTab hospital user={props.user} type="finished" />
+          <RequestsTab user={props.user} type="finished" />
           : <></>
         }
       </TabPanel>
@@ -134,4 +134,4 @@ const HospitalDashboard  = (props: HospitalDashboardProps): React.ReactElement =
   );
 }
 
-export default HospitalDashboard;
+export default ProviderDashboard;

@@ -8,6 +8,8 @@ export interface User {
 export interface Request {
   id?: string;
   ambulance_type: string;
+	origin_name: string,
+	origin_address: string,
   destination_address: string;
   destination_name: string;
   description: string;

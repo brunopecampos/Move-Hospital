@@ -1,0 +1,7 @@
+(1) Como empresa de ambulância, quero receber notificações de novas solicitações de serviços
+(1) Como empresa de ambulância, quero registrar o celular da ambulância para monitoramento de localização
+(2) Como empresa de ambulância, quero receber feedback dos hospitais sobre meus serviços ???
+(3) Como empresa de ambulância, quero cancelar uma proposta de serviço se não puder cumprir a solicitação
+(3) Como hospital, quero ver os detalhes da frota das empresas de ambulância
+(3) Como hospital, quero exportar os detalhes das minhas solicitações de serviço (para fins de relatório, faturamento, etc.)
+(3) Como empresa de ambulância, quero exportar os detalhes dos serviços que forneci (para fins de relatório, faturamento, etc.)
