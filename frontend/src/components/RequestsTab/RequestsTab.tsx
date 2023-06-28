@@ -19,9 +19,12 @@ const hResquests: Request[] = [{
     destination_address: "rua aaaaaaaaaaa numero aaaaaaa",
     destination_name: "hospital aaaaaaaa",
     status: "ongoing",
-    hospital_id: "aaaaa",
-    patient_id: "aaaaaa",
-    offer_id: "aaaaaa",
+    patient_name: "aaaa",
+    patient_age: 10,
+    patient_gender: "m",
+    patient_clinical_condition: "blabla",
+    patient_phone: "123123123",
+    patient_observations: "blelble",
     responsible_phone: "aaaaaaaaa"
 },
 {
@@ -34,9 +37,12 @@ const hResquests: Request[] = [{
     destination_address: "rua bbbbbbbbbbb numero bbbbbbb",
     destination_name: "hospital bbbbbbbb",
     status: "ongoing",
-    hospital_id: "bbbbb",
-    patient_id: "bbbbbbb",
-    offer_id: "bbbbbb",
+    patient_name: "aaaa",
+    patient_age: 10,
+    patient_gender: "m",
+    patient_clinical_condition: "blabla",
+    patient_phone: "123123123",
+    patient_observations: "blelble",
     responsible_phone: "bbbbbbbbb"
 },
 {
@@ -49,9 +55,12 @@ const hResquests: Request[] = [{
     destination_address: "rua bbbbbbbbbbb numero bbbbbbb",
     destination_name: "hospital bbbbbbbb",
     status: "created",
-    hospital_id: "bbbbb",
-    patient_id: "bbbbbbb",
-    offer_id: "bbbbbb",
+    patient_name: "aaaa",
+    patient_age: 10,
+    patient_gender: "m",
+    patient_clinical_condition: "blabla",
+    patient_phone: "123123123",
+    patient_observations: "blelble",
     responsible_phone: "bbbbbbbbb"
 }
 ]
