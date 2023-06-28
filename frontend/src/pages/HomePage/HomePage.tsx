@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import httpClient from "../../httpClient";
 import { User } from "../../types";
 import { useNavigate } from "react-router-dom";
-import HospitalPage  from "../../components/HospitalPage/HospitalPage"
+import HospitalDashboard  from "../../components/HospitalDashboard/HospitalDashboard"
 
 const HomePage: React.FC = () => {
   const [user, setUser] = useState<User | null>(null);
@@ -25,7 +25,7 @@ const HomePage: React.FC = () => {
     })();
   }, []);
 
-  return user ? user.user_type == "hospital" ? <HospitalPage user={user} /> : <></> : <></>
+  return user ? user.user_type == "hospital" ? <HospitalDashboard user={user} /> : <></> : <></>
 };
 
 export default HomePage;

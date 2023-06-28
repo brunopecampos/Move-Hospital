@@ -4,7 +4,7 @@ import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
-import { RequestsCard } from '../RequestsCard/RequestsCard';
+import { RequestsTab } from '../RequestsTab/RequestsTab';
 import { User } from '../../types';
 
 interface TabPanelProps {
@@ -40,11 +40,11 @@ function a11yProps(index: number) {
   };
 }
 
-interface HospitalPageProps {
+interface HospitalDashboardProps {
   user: User | null
 }
 
-const HospitalPage  = (props: HospitalPageProps): React.ReactElement => {
+const HospitalDashboard  = (props: HospitalDashboardProps): React.ReactElement => {
   const [value, setValue] = React.useState(1);
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
@@ -77,28 +77,28 @@ const HospitalPage  = (props: HospitalPageProps): React.ReactElement => {
 
         {
           props.user ?
-          <RequestsCard header user={props.user} type="ongoing" />
+          <RequestsTab header user={props.user} type="ongoing" />
           : <></>
         }
       </TabPanel>
       <TabPanel value={value} index={2}>
         {
           props.user ?
-          <RequestsCard header user={props.user} type="scheduled" />
+          <RequestsTab header user={props.user} type="scheduled" />
           : <></>
         }
       </TabPanel>
       <TabPanel value={value} index={3}>
         {
           props.user ?
-          <RequestsCard header user={props.user} type="created" />
+          <RequestsTab header user={props.user} type="created" />
           : <></>
         }
       </TabPanel>
       <TabPanel value={value} index={4}>
         {
           props.user ?
-          <RequestsCard header user={props.user} type="finished" />
+          <RequestsTab header user={props.user} type="finished" />
           : <></>
         }
       </TabPanel>
@@ -110,4 +110,4 @@ const HospitalPage  = (props: HospitalPageProps): React.ReactElement => {
   );
 }
 
-export default HospitalPage;
+export default HospitalDashboard;
