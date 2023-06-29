@@ -25,7 +25,10 @@ export interface Request {
 	patient_observations: string,
   provider_name?: string,
   price?: number,
-  status?: "created" | "schedules" | "ongoing" | "finished"
+  driver_name?: string,
+  ambulance_model?: string,
+  ambulance_license_plate?: string,
+  status?: "pending" | "expired" | "scheduled" | "canceled" | "ongoing" | "patient_collected" | "finished"
   avaliation?: number
 }
 

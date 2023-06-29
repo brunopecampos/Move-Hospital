@@ -1,4 +1,4 @@
-import { Stack, Button, Modal, Box, Typography, TextField } from '@mui/material';
+import { Stack, Button, Modal, Box, Typography, TextField, hexToRgb } from '@mui/material';
 import { useState } from 'react';
 import { Offer } from '../../types';
 import { SimpleOffer } from '../SimpleOffer/SimpleOffer';
@@ -37,7 +37,7 @@ export const OfferModal = (props: OfferModalProps): React.ReactElement => {
     left: '50%',
     transform: 'translate(-50%, -50%)',
     width: 1000,
-    bgcolor: "#504DA6",
+    bgcolor: 'rgba(80, 77, 166, 0.8)',
     border: '2px solid #000',
     boxShadow: 24,
     p: 4,

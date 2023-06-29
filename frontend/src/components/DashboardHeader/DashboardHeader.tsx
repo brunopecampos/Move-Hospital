@@ -36,7 +36,7 @@ export const DashboardHeader = (props: DashboardHeaderProps): React.ReactElement
     left: '50%',
     transform: 'translate(-50%, -50%)',
     width: 1000,
-    bgcolor: "#504DA6",
+    bgcolor: 'rgba(80, 77, 166, 0.9)',
     border: '2px solid #000',
     boxShadow: 24,
     p: 4,
