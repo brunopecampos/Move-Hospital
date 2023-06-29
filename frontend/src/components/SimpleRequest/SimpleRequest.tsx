@@ -8,7 +8,8 @@ import { OfferModal } from '../OfferModal/OfferModal';
 
 export interface SimpleRequestProps {
   request: Request
-  provider?: boolean
+  isHospital: boolean
+  type: String
 }
 
 export const SimpleRequest = (props: SimpleRequestProps): React.ReactElement => 
@@ -65,47 +66,47 @@ export const SimpleRequest = (props: SimpleRequestProps): React.ReactElement =>
 
   return (
     <>
-      <Stack direction="row" spacing={5} height={100} alignItems='center'>
+      <Stack direction="row" height={100} alignItems='center'>
+        <RequestTextField title="Destino" content={props.request.origin_name} />
         <RequestTextField title="Destino" content={props.request.destination_name} />
         <RequestTextField title="Data de Transferência" content={props.request.transference_time.toDateString()} />
-        {
-          props.provider ?
-            <></>
-          :
-          props.request.status == "ongoing" ?
-            <RequestTextField title="Estado da Transferência" content={"Indo Buscar Passageiro"} />
-          : props.request.status == "created" ?
-            <>
-              <OfferModal requestId={props.request.id}/>
-            </>
-          :
-            <RequestTextField title="Tipo de Ambulância" content={props.request.ambulance_type} />
-        }
-
-        <Container sx={{width: 150}}>
-          <Button sx={{height: 40}} variant="contained" onClick={() => requestDetails()}> {details ? "Esconder" : "Detalhes"}</Button>
-        </Container>
+        <RequestTextField title="Status" content={props.type == "pending" ? "Aguardando Resposta" : ""} />
       </Stack>
       {details ? <>
-
-        <Stack direction="row" spacing={5} height={100} alignItems='center'>
+        <Stack direction="row" height={100} alignItems='center'>
           <RequestTextField title="Nome do responsável" content={props.request.responsible_name}></RequestTextField>
           <RequestTextField title="Criação da Transferência" content={props.request.created.toDateString()}></RequestTextField>
           <RequestTextField title="Nome do Paciente" content={patient}></RequestTextField>
           <RequestTextField title="Empresa Responsável" content={provider}></RequestTextField>
         </Stack>
-        <Stack direction="row" spacing={5} height={100} alignItems='center'>
-          <RequestTextField width={340} title="Descrição" content={props.request.description}></RequestTextField>
-          <RequestTextField width={340} title="Endereço" content={props.request.destination_address}></RequestTextField>
-        </Stack>
-        </> : <></>}
+        <Box display='flex' alignItems='center'>
+          <RequestTextField width={300} title="Descrição" content={props.request.description}></RequestTextField>
+          <RequestTextField width={300} title="Endereço" content={props.request.destination_address}></RequestTextField>
+        </Box>
+        </> : <></>
+      }
+      <Stack direction="row" height={50} justifyContent='center' alignItems='center'>
+        <Container sx={{width: 150}}>
+          <Button sx={{height: 40}} variant="contained" onClick={() => requestDetails()}>{details ? "Esconder" : "Detalhes"}</Button>
+        </Container>
+        {
+          props.isHospital ?
+            props.type == "pending" ?
+              <OfferModal requestId={props.request.id} />
+            :
+          
+          <></> :
+          <></>
+        }
+      </Stack>
+      
     </>
   );
 }
 
 const RequestTextField = (props: {title: string, content: string, width?: number}): React.ReactElement => {
   return (
-    <Container sx={{width: props.width ?? 150}}>
+    <Box sx={{width: props.width ?? 150, padding: "5px"}}>
       <p style={{
         fontWeight: 700,
         fontSize: 11,
@@ -116,6 +117,6 @@ const RequestTextField = (props: {title: string, content: string, width?: number
         fontSize: 12,
         wordWrap: 'break-word'
       }}>{props.content}</p>
-    </Container>
+    </Box>
   )
 }

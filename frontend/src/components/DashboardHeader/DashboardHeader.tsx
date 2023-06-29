@@ -53,7 +53,7 @@ export const DashboardHeader = (props: DashboardHeaderProps): React.ReactElement
     <>
       <Stack direction="row" spacing={60} height={100}>
        <h1>Olá {props.username}</h1>
-       <Button variant="contained" onClick={handleOpen}>Nova solicitação</Button>
+       <Button variant="contained" sx={{height: 40, alignSelf: 'center'}} onClick={handleOpen}>Nova solicitação</Button>
        <Modal
           open={open}
           onClose={handleClose}

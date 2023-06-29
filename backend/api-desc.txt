@@ -306,7 +306,7 @@ Telas Empresas:
 			email: string
 		}
 
-request status: "created", "expired", "scheduled", "canceled", "ongoing", "patient_collected", "finished"
+request status: "peding", "expired", "scheduled", "canceled", "ongoing", "patient_collected", "finished"
 
 	      |-> expired
 pending --|               |-> canceled
@@ -314,7 +314,7 @@ pending --|               |-> canceled
 		  				  |-> ongoing -> patient_collected -> finished
 
 
-offer status: "created", "denied", "accepted", "expired"
+offer status: "pending", "denied", "accepted", "expired"
 
 		  |-> denied
 		  |

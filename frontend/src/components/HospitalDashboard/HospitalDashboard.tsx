@@ -74,7 +74,7 @@ const HospitalDashboard  = (props: HospitalDashboardProps): React.ReactElement =
 
   return (
     <Box
-      sx={{ flexGrow: 1, bgcolor: '#F5F5F5', display: 'flex'}}
+      sx={{flexGrow: 1, bgcolor: '#F5F5F5', display: 'flex'}}
     >
       <Tabs
         orientation="vertical"
@@ -97,28 +97,28 @@ const HospitalDashboard  = (props: HospitalDashboardProps): React.ReactElement =
       <TabPanel value={value} index={1}>
         {
           props.user ?
-          <RequestsTab hospital user={props.user} type="ongoing" />
+          <RequestsTab user={props.user} type="ongoing" />
           : <></>
         }
       </TabPanel>
       <TabPanel value={value} index={2}>
         {
           props.user ?
-          <RequestsTab hospital user={props.user} type="scheduled" />
+          <RequestsTab user={props.user} type="scheduled" />
           : <></>
         }
       </TabPanel>
       <TabPanel value={value} index={3}>
         {
           props.user ?
-          <RequestsTab hospital user={props.user} type="created" />
+          <RequestsTab user={props.user} type="pending" />
           : <></>
         }
       </TabPanel>
       <TabPanel value={value} index={4}>
         {
           props.user ?
-          <RequestsTab hospital user={props.user} type="finished" />
+          <RequestsTab user={props.user} type="finished" />
           : <></>
         }
       </TabPanel>
