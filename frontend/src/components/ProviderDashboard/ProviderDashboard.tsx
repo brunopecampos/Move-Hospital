@@ -87,9 +87,9 @@ const ProviderDashboard  = (props: ProviderDashboardProps): React.ReactElement =
       >
         <img src={loginImage} alt="Description of the image" style={{width: "80%", alignSelf: 'center'}}/>
         <Tab label="Transferências em Andamento" {...a11yProps(1)} />
-        <Tab label="Transferências Agendadas" {...a11yProps(2)} />
-        <Tab label="Transferências Criadas" {...a11yProps(3)} />
-        <Tab label="Transferências Finalizdas" {...a11yProps(4)} />
+        <Tab label="Novas transferências" {...a11yProps(2)} />
+        <Tab label="Suas ofertas" {...a11yProps(3)} />
+        <Tab label="Transferências marcadas" {...a11yProps(4)} />
         <Tab label="Meu Perfil" {...a11yProps(5)} />
         <Tab label="Sair" {...a11yProps(6)} onClick={() => props.logout()} />
       </Tabs>
@@ -104,7 +104,7 @@ const ProviderDashboard  = (props: ProviderDashboardProps): React.ReactElement =
       <TabPanel value={value} index={2}>
         {
           props.user ?
-          <RequestsTab user={props.user} type="scheduled" />
+          <RequestsTab user={props.user} type="pending" />
           : <></>
         }
       </TabPanel>

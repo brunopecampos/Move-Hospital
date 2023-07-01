@@ -219,6 +219,12 @@ export const DashboardHeader = (props: DashboardHeaderProps): React.ReactElement
                 color='secondary'
                 size='small'
               />
+              <div style={{display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', marginTop: '10px'}}>
+                <Button style={{backgroundColor: 'white', color: 'black'}} type="submit" variant="contained" color="primary">
+              Criar Solicitação
+              </Button>
+
+              </div>
             </form>
           </Box>
         </Modal>

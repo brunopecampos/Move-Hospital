@@ -3,11 +3,11 @@ import { useState } from 'react';
 import { Offer } from '../../types';
 import { SimpleOffer } from '../SimpleOffer/SimpleOffer';
 
-interface OfferModalProps{
+interface OffersModalProps{
     requestId: string | undefined
 }
 
-export const OfferModal = (props: OfferModalProps): React.ReactElement => {
+export const OffersModal = (props: OffersModalProps): React.ReactElement => {
 
   const [open, setOpen] = useState<boolean>(false);
   const handleOpen = () => setOpen(true);

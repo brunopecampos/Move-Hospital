@@ -4,7 +4,6 @@ import { Offer, Request, User } from '../../types';
 import Box from '@mui/material/Box';
 import { Button, Container, Stack, Card, Typography } from '@mui/material';
 import { ThemeContext } from '@emotion/react';
-import { OfferModal } from '../OfferModal/OfferModal';
 
 export interface SimpleOfferProps {
   offer: Offer

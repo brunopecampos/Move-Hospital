@@ -4,7 +4,8 @@ import { Offer, Request, User } from '../../types';
 import Box from '@mui/material/Box';
 import { Button, Container, Stack, Card } from '@mui/material';
 import { ThemeContext } from '@emotion/react';
-import { OfferModal } from '../OfferModal/OfferModal';
+import { OffersModal } from '../OffersModal/OffersModal';
+import { CreateOfferModal } from '../CreateOfferModal/CreateOfferModal';
 
 export interface SimpleRequestProps {
   request: Request
@@ -90,20 +91,21 @@ export const SimpleRequest = (props: SimpleRequestProps): React.ReactElement =>
         </> : <></>
       }
 
-      <Stack direction="row" height={50} justifyContent='center' alignItems='center'>
-        <Container sx={{width: 150}}>
-          <Button sx={{height: 40}} variant="contained" onClick={() => requestDetails()}>{details ? "Esconder" : "Detalhes"}</Button>
-        </Container>
+      <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'center', marginTop: '10px', height: '50px'}}>
+          <Button sx={{height: 40, marginRight: '10px'}} variant="contained" onClick={() => requestDetails()}>{details ? "Esconder" : "Detalhes"}</Button>
         {
           props.isHospital ?
             props.type == "pending" ?
-              <OfferModal requestId={props.request.id} />
+              <OffersModal requestId={props.request.id} />
             :
-          
-          <></> :
+              <></> 
+            :
+            props.type == "pending" ? 
+             <CreateOfferModal requestId='kasdf'/> 
+            :
           <></>
         }
-      </Stack>
+      </div>
       
     </>
   );
