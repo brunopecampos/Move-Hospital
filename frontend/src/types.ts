@@ -34,13 +34,17 @@ export interface Request {
 
 export interface Offer {
   id?: string;
-  provider_name?: string;
+  hospital_name?: string;
+  ambulance_license_place?: string;
+  ambulance_model?: string;
   price: number;
-  driver_name?: string;
   created?: Date;
   code?: string;
-  ambulance_id?: string;
-  driver_id?: string;
+	origin_address?: string,
+	destination_address?: string
+	transference_time?: Date,
+  driver_name?: string;
+	ambulance_id?: string;
   status?: "created" | "scheduled" | "ongoing" | "finished"
 }
 

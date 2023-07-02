@@ -7,6 +7,7 @@ import Box from '@mui/material/Box';
 import { RequestsTab } from '../RequestsTab/RequestsTab';
 import { User, Hospital } from '../../types';
 import { ProfileForm } from '../ProfileForm/Profile';
+import { OffersTab } from '../OfferTab/OfferTab';
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -111,7 +112,7 @@ const ProviderDashboard  = (props: ProviderDashboardProps): React.ReactElement =
       <TabPanel value={value} index={3}>
         {
           props.user ?
-          <RequestsTab user={props.user} type="created" />
+          <OffersTab type="accepted" />
           : <></>
         }
       </TabPanel>

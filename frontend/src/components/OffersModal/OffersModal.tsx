@@ -19,14 +19,14 @@ export const OffersModal = (props: OffersModalProps): React.ReactElement => {
         code: "aaaaaa",
         price: 50.00,
         status: "created",
-        driver_id: "aaaa",
+        driver_name: "aaaa",
         ambulance_id: "aaaa"
     },
     {
         code: "bbbbbb",
         price: 100.00,
         status: "created",
-        driver_id: "aaaa",
+        driver_name: "aaaa",
         ambulance_id: "aaaa"
     }
   ])

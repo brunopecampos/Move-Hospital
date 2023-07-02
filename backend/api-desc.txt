@@ -188,7 +188,7 @@ Telas Empresas:
 	POST: /provider/{providerId}/offer/{requestId}
 		input: json: {
 			price: real,
-			ambulance_id: integer,
+			ambulance_id,
 			driver_name: string;
 			driver_cpf: string;
 		}
@@ -197,9 +197,13 @@ Telas Empresas:
 	GET: /provider/{providerId}/offer/pending
 		output: json {
 			price: real,
-			driver_name: string,
+			hospital_name,
+			origin_address: string,
+			destination_address: string
 			transference_time: datetime,
-			destination_name
+			driver_name: string,
+			ambulance_model: string
+			ambulance_license_plate: string
 		}
 
 	/* gets denied or expired offers */
@@ -208,7 +212,7 @@ Telas Empresas:
 			price: real,
 			driver_name: string,
 			transference_time: datetime,
-			destination_name
+			destination_name,
 		}
 	
 
