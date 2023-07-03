@@ -94,7 +94,7 @@ export const RequestsTab = (props: RequestsTabProps): React.ReactElement => {
         {
           isHospital(props.user) ?
             <DashboardHeader username={props.user.name} />
-          : <h1>Novas Solicitações</h1>
+          : <></>
         }
         <Card elevation={3}  sx={{
           padding: 5

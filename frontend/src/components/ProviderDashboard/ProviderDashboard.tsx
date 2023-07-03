@@ -91,8 +91,9 @@ const ProviderDashboard  = (props: ProviderDashboardProps): React.ReactElement =
         <Tab label="Novas transferências" {...a11yProps(2)} />
         <Tab label="Suas ofertas" {...a11yProps(3)} />
         <Tab label="Transferências marcadas" {...a11yProps(4)} />
-        <Tab label="Meu Perfil" {...a11yProps(5)} />
-        <Tab label="Sair" {...a11yProps(6)} onClick={() => props.logout()} />
+        <Tab label="Histórico" {...a11yProps(5)} />
+        <Tab label="Meu Perfil" {...a11yProps(6)} />
+        <Tab label="Sair" {...a11yProps(7)} onClick={() => props.logout()} />
       </Tabs>
       <TabPanel value={value} index={0}></TabPanel>
       <TabPanel value={value} index={1}>
@@ -119,18 +120,25 @@ const ProviderDashboard  = (props: ProviderDashboardProps): React.ReactElement =
       <TabPanel value={value} index={4}>
         {
           props.user ?
-          <RequestsTab user={props.user} type="finished" />
+          <RequestsTab user={props.user} type="scheduled" />
           : <></>
         }
       </TabPanel>
       <TabPanel value={value} index={5}>
+        {
+          props.user ?
+          <RequestsTab user={props.user} type="finished" />
+          : <></>
+        }
+      </TabPanel>
+      <TabPanel value={value} index={6}>
       {
           props.user ?
           <ProfileForm />
           : <></>
         }
       </TabPanel>
-      <TabPanel value={value} index={6}></TabPanel>
+      <TabPanel value={value} index={7}></TabPanel>
     </Box>
   );
 }

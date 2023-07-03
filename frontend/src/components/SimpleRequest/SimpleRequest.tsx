@@ -21,8 +21,11 @@ export const SimpleRequest = (props: SimpleRequestProps): React.ReactElement => 
   const [patient, setPatient] = useState<string>("Placeholder")
   const [provider, setProvider] = useState<string>("Placeholder")
 
-  const [openModal, setOpenModal] = useState<boolean>(false)
-  const closeModal = () => setOpenModal(false)
+  const [listOfferModal, setListOfferModal] = useState<boolean>(false)
+  const closeOfferList = () => setListOfferModal(false)
+
+  const [makeOfferModal, setMakeOfferModal] =  useState<boolean>(false)
+  const closeMakeOffer = () => setMakeOfferModal(false)
 
   const [offers, setOffers] = useState<Offer[]> ([
     {
@@ -73,8 +76,8 @@ export const SimpleRequest = (props: SimpleRequestProps): React.ReactElement => 
                 props.type == "pending" ?
                   <>
                     <Button sx={{backgroundColor: 'red', marginRight: 2}} variant="contained" onClick={() => {}}>Excluir Transferência</Button>
-                    <Button sx={{backgroundColor: 'green', marginRight: 2}} variant="contained" onClick={() => setOpenModal(true)}>Ver Propostas</Button>
-                    <OffersModal open={openModal} closeModal={closeModal} offers={offers} />
+                    <Button sx={{backgroundColor: 'green', marginRight: 2}} variant="contained" onClick={() => setListOfferModal(true)}>Ver Propostas</Button>
+                    <OffersModal open={listOfferModal} closeModal={closeOfferList} offers={offers} />
                   </>
                   : props.type == "scheduled" ?
                       <Button sx={{backgroundColor: 'red', marginRight: 2}} variant="contained" onClick={() => {}}>Excluir Transferência</Button>
@@ -84,9 +87,18 @@ export const SimpleRequest = (props: SimpleRequestProps): React.ReactElement => 
 
               :
                 props.type == "pending" ?
-                  <CreateOfferModal requestId='kasdf' />
-                  :
-                  <></>
+                  <>
+                    <Button sx={{backgroundColor: 'green', marginRight: 1}} variant="contained" onClick={() => setMakeOfferModal(true)}>Fazer Proposta</Button>
+                    <CreateOfferModal closeModel={closeMakeOffer} requestId='kasdf' open={makeOfferModal} />
+                  </>
+                  : props.type == "ongoing" ?
+                    <>
+                      <Button sx={{backgroundColor: 'green', marginRight: 1}} variant="contained" onClick={() => {}}>Atualizar Status</Button>
+                      <Button sx={{backgroundColor: 'green', marginRight: 1}} variant="contained" onClick={() => {}}>Atualizar Localização</Button>
+                    </>
+                    : props.type == "scheduled" ?
+                      <Button sx={{backgroundColor: 'red', marginRight: 1}} variant="contained" onClick={() => {}}>Cancelar Transferência</Button>
+                      : <></>
             }
             <Button sx={{backgroundColor: '#504DA6'}} variant="contained" onClick={() => { requestDetails() }}>{details ? "Esconder" : "Detalhes"}</Button>
           </div>

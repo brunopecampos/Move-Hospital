@@ -5,14 +5,12 @@ import { SimpleOffer } from '../SimpleOffer/SimpleOffer';
 import { Ambulance } from '../../types';
 
 interface CreateOfferModalProps{
-    requestId: string | undefined
+  open: boolean
+  closeModel: () => void
+  requestId: string | undefined
 }
 
 export const CreateOfferModal = (props: CreateOfferModalProps): React.ReactElement => {
-
-  const [open, setOpen] = useState<boolean>(false);
-  const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
 
   const [price, setPrice] = useState<string>("")  
   const [driverName, setDriverName] = useState<string>("")
@@ -66,10 +64,9 @@ export const CreateOfferModal = (props: CreateOfferModalProps): React.ReactEleme
 
   return (
     <>
-       <Button sx={{height: 40}} variant="contained" onClick={handleOpen}>Fazer Proposta</Button>
        <Modal
-          open={open}
-          onClose={handleClose}
+          open={props.open}
+          onClose={props.closeModel}
           aria-labelledby="modal-modal-title"
           aria-describedby="modal-modal-description"
         >

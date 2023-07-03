@@ -75,7 +75,6 @@ export const OffersTab = (props: OffersTabProps): React.ReactElement => {
     }}>
       <Container>
         <Card elevation={3}  sx={{
-          marginTop: 10,
           padding: 5
         }}>
           <span style={{
