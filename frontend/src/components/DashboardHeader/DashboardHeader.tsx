@@ -51,8 +51,8 @@ export const DashboardHeader = (props: DashboardHeaderProps): React.ReactElement
 
   return (
     <>
-      <Stack direction="row" spacing={60} height={100}>
-       <h1>Olá {props.username}</h1>
+      <div style={{height: 50, marginBottom: 20, width: "100%", display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginTop: '10px'}}>
+       <span style={{fontSize: 20, fontWeight: 'bold', maxWidth: "200px"}}>Olá, {props.username}</span>
        <Button variant="contained" sx={{height: 40, alignSelf: 'center'}} onClick={handleOpen}>Nova solicitação</Button>
        <Modal
           open={open}
@@ -228,7 +228,7 @@ export const DashboardHeader = (props: DashboardHeaderProps): React.ReactElement
             </form>
           </Box>
         </Modal>
-      </Stack> 
+      </div> 
     </>
   );
 }

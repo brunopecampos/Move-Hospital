@@ -4,32 +4,12 @@ import { Offer } from '../../types';
 import { SimpleOffer } from '../SimpleOffer/SimpleOffer';
 
 interface OffersModalProps{
-    requestId: string | undefined
+  offers: Offer[]
+  open: boolean
+  closeModal: () => void
 }
 
 export const OffersModal = (props: OffersModalProps): React.ReactElement => {
-
-  const [open, setOpen] = useState<boolean>(false);
-  const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
-  
-
-  const [offers, setOffers] = useState<Offer[]> ([
-    {
-        code: "aaaaaa",
-        price: 50.00,
-        status: "created",
-        driver_name: "aaaa",
-        ambulance_id: "aaaa"
-    },
-    {
-        code: "bbbbbb",
-        price: 100.00,
-        status: "created",
-        driver_name: "aaaa",
-        ambulance_id: "aaaa"
-    }
-  ])
 
   const modalStyle = {
     position: 'absolute' as 'absolute',
@@ -50,18 +30,16 @@ export const OffersModal = (props: OffersModalProps): React.ReactElement => {
     marginBottom: '5px',
   };
 
-  const listRequests = offers.map((item, index) => (
+  const listRequests = props.offers.map((item, index) => (
     <>
-      <SimpleOffer closeModal={() => { setOpen(false) }} offer={item} offerIndex={index}></SimpleOffer>
+      <SimpleOffer closeModal={props.closeModal} offer={item} offerIndex={index}></SimpleOffer>
     </>
   ))
 
   return (
-    <>
-       <Button sx={{height: 40}} variant="contained" onClick={handleOpen}> Novas Ofertas </Button>
        <Modal
-          open={open}
-          onClose={handleClose}
+          open={props.open}
+          onClose={() => {}}
           aria-labelledby="modal-modal-title"
           aria-describedby="modal-modal-description"
         >
@@ -72,6 +50,5 @@ export const OffersModal = (props: OffersModalProps): React.ReactElement => {
             }
           </Box>
         </Modal>
-    </>
   );
 }

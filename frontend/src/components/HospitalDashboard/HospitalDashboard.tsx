@@ -89,7 +89,7 @@ const HospitalDashboard  = (props: HospitalDashboardProps): React.ReactElement =
         <Tab label="Transferências em Andamento" {...a11yProps(1)} />
         <Tab label="Transferências Agendadas" {...a11yProps(2)} />
         <Tab label="Transferências Criadas" {...a11yProps(3)} />
-        <Tab label="Transferências Finalizdas" {...a11yProps(4)} />
+        <Tab label="Transferências Finalizadas" {...a11yProps(4)} />
         <Tab label="Meu Perfil" {...a11yProps(5)} />
         <Tab label="Sair" {...a11yProps(6)} onClick={() => props.logout()} />
       </Tabs>

@@ -93,11 +93,10 @@ export const RequestsTab = (props: RequestsTabProps): React.ReactElement => {
       <Container>
         {
           isHospital(props.user) ?
-            <DashboardHeader username={props.user.username} />
+            <DashboardHeader username={props.user.name} />
           : <h1>Novas Solicitações</h1>
         }
         <Card elevation={3}  sx={{
-          marginTop: 10,
           padding: 5
         }}>
           <span style={{
