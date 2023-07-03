@@ -4,7 +4,6 @@ import { Offer, Request, User } from '../../types';
 import Box from '@mui/material/Box';
 import { Button, Container, Stack, Card, Typography } from '@mui/material';
 import { ThemeContext } from '@emotion/react';
-import { OfferModal } from '../OfferModal/OfferModal';
 
 export interface SimpleOfferProps {
   offer: Offer
@@ -27,16 +26,14 @@ export const SimpleOffer = (props: SimpleOfferProps): React.ReactElement =>
           code: "aaaaaa",
           price: 50.00,
           status: "created",
-          provider_id: "aaa",
-          driver_id: "aaaa",
+          driver_name: "aaaa",
           ambulance_id: "aaaa"
       },
       {
           code: "bbbbbb",
           price: 100.00,
           status: "created",
-          provider_id: "aaa",
-          driver_id: "aaaa",
+          driver_name: "aaaa",
           ambulance_id: "aaaa"
       }
     ]
@@ -55,10 +52,10 @@ export const SimpleOffer = (props: SimpleOfferProps): React.ReactElement =>
         Proposta {props.offerIndex + 1}
       </Typography>
       <Stack direction="row" spacing={5} height={100} alignItems='center' sx={{backgroundColor: 'white'}}>
-        <RequestTextField title="Empresa" content={props.offer.code} />
-        <RequestTextField title="Valor" content={props.offer.price.toString()} />
-        <RequestTextField title="Distância até ponto de embarque" content={props.offer.status} />
-        <RequestTextField title="Avaliação" content={props.offer.status} />
+        <OfferTextField title="Empresa" content={props.offer.code} />
+        <OfferTextField title="Valor" content={props.offer.price.toString()} />
+        <OfferTextField title="Distância até ponto de embarque" content={props.offer.status} />
+        <OfferTextField title="Avaliação" content={props.offer.status} />
         <Container sx={{width: 150}}>
           <Button sx={{height: 40, backgroundColor: 'green', paddingTop: "30px", paddingBottom: "30px"}} variant="contained" onClick={() => acceptOffer()}> Aceitar Oferta</Button>
         </Container>
@@ -67,17 +64,17 @@ export const SimpleOffer = (props: SimpleOfferProps): React.ReactElement =>
   );
 }
 
-const RequestTextField = (props: {title: string, content: string, width?: number}): React.ReactElement => {
+export const OfferTextField = (props: {title: string, content: string | undefined, width?: number}): React.ReactElement => {
   return (
     <Container sx={{width: props.width ?? 150}}>
       <p style={{
         fontWeight: 700,
-        fontSize: 14,
+        fontSize: 11,
         wordWrap: 'break-word'
       }}>{props.title}</p>
       <p style={{
         color: 'grey',
-        fontSize: 15,
+        fontSize: 12,
         wordWrap: 'break-word'
       }}>{props.content}</p>
     </Container>

@@ -7,6 +7,7 @@ import Box from '@mui/material/Box';
 import { RequestsTab } from '../RequestsTab/RequestsTab';
 import { User, Hospital } from '../../types';
 import { ProfileForm } from '../ProfileForm/Profile';
+import { OffersTab } from '../OfferTab/OfferTab';
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -41,12 +42,12 @@ function a11yProps(index: number) {
   };
 }
 
-interface HospitalDashboardProps {
-  user: User | null
+interface ProviderDashboardProps {
+  user: User | null;
   logout: () => {};
 }
 
-const HospitalDashboard  = (props: HospitalDashboardProps): React.ReactElement => {
+const ProviderDashboard  = (props: ProviderDashboardProps): React.ReactElement => {
   const [value, setValue] = React.useState(1);
   const [name, setName] = React.useState('');
   const [cnpj, setCnpj] = React.useState('');
@@ -74,7 +75,7 @@ const HospitalDashboard  = (props: HospitalDashboardProps): React.ReactElement =
 
   return (
     <Box
-      sx={{flexGrow: 1, bgcolor: '#F5F5F5', display: 'flex'}}
+      sx={{ flexGrow: 1, bgcolor: '#F5F5F5', display: 'flex'}}
     >
       <Tabs
         orientation="vertical"
@@ -87,11 +88,12 @@ const HospitalDashboard  = (props: HospitalDashboardProps): React.ReactElement =
       >
         <img src={loginImage} alt="Description of the image" style={{width: "80%", alignSelf: 'center'}}/>
         <Tab label="Transferências em Andamento" {...a11yProps(1)} />
-        <Tab label="Transferências Agendadas" {...a11yProps(2)} />
-        <Tab label="Transferências Criadas" {...a11yProps(3)} />
-        <Tab label="Transferências Finalizadas" {...a11yProps(4)} />
-        <Tab label="Meu Perfil" {...a11yProps(5)} />
-        <Tab label="Sair" {...a11yProps(6)} onClick={() => props.logout()} />
+        <Tab label="Novas transferências" {...a11yProps(2)} />
+        <Tab label="Suas ofertas" {...a11yProps(3)} />
+        <Tab label="Transferências marcadas" {...a11yProps(4)} />
+        <Tab label="Histórico" {...a11yProps(5)} />
+        <Tab label="Meu Perfil" {...a11yProps(6)} />
+        <Tab label="Sair" {...a11yProps(7)} onClick={() => props.logout()} />
       </Tabs>
       <TabPanel value={value} index={0}></TabPanel>
       <TabPanel value={value} index={1}>
@@ -104,34 +106,41 @@ const HospitalDashboard  = (props: HospitalDashboardProps): React.ReactElement =
       <TabPanel value={value} index={2}>
         {
           props.user ?
-          <RequestsTab user={props.user} type="scheduled" />
+          <RequestsTab user={props.user} type="pending" />
           : <></>
         }
       </TabPanel>
       <TabPanel value={value} index={3}>
         {
           props.user ?
-          <RequestsTab user={props.user} type="pending" />
+          <OffersTab type="accepted" />
           : <></>
         }
       </TabPanel>
       <TabPanel value={value} index={4}>
         {
           props.user ?
-          <RequestsTab user={props.user} type="finished" />
+          <RequestsTab user={props.user} type="scheduled" />
           : <></>
         }
       </TabPanel>
       <TabPanel value={value} index={5}>
+        {
+          props.user ?
+          <RequestsTab user={props.user} type="finished" />
+          : <></>
+        }
+      </TabPanel>
+      <TabPanel value={value} index={6}>
       {
           props.user ?
           <ProfileForm />
           : <></>
         }
       </TabPanel>
-      <TabPanel value={value} index={6}></TabPanel>
+      <TabPanel value={value} index={7}></TabPanel>
     </Box>
   );
 }
 
-export default HospitalDashboard;
+export default ProviderDashboard;

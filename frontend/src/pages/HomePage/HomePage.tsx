@@ -3,6 +3,7 @@ import httpClient from "../../httpClient";
 import { User } from "../../types";
 import { useNavigate } from "react-router-dom";
 import HospitalDashboard  from "../../components/HospitalDashboard/HospitalDashboard"
+import ProviderDashboard  from "../../components/ProviderDashboard/ProviderDashboard"
 
 const HomePage: React.FC = () => {
   const [user, setUser] = useState<User | null>(null);
@@ -25,7 +26,7 @@ const HomePage: React.FC = () => {
     })();
   }, []);
 
-  return user ? user.user_type == "hospital" ? <HospitalDashboard user={user} /> : <></> : <></>
+  return user ? user.user_type == "hospital" ? <HospitalDashboard logout={logoutUser} user={user} /> : <ProviderDashboard logout={logoutUser} user={user} /> : <></>
 };
 
 export default HomePage;

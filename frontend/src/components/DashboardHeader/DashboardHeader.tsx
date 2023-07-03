@@ -36,7 +36,7 @@ export const DashboardHeader = (props: DashboardHeaderProps): React.ReactElement
     left: '50%',
     transform: 'translate(-50%, -50%)',
     width: 1000,
-    bgcolor: "#504DA6",
+    bgcolor: 'rgba(80, 77, 166, 0.9)',
     border: '2px solid #000',
     boxShadow: 24,
     p: 4,
@@ -51,9 +51,9 @@ export const DashboardHeader = (props: DashboardHeaderProps): React.ReactElement
 
   return (
     <>
-      <Stack direction="row" spacing={60} height={100}>
-       <h1>Olá {props.username}</h1>
-       <Button variant="contained" onClick={handleOpen}>Nova solicitação</Button>
+      <div style={{height: 50, marginBottom: 20, width: "100%", display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginTop: '10px'}}>
+       <span style={{fontSize: 20, fontWeight: 'bold', maxWidth: "200px"}}>Olá, {props.username}</span>
+       <Button variant="contained" sx={{height: 40, alignSelf: 'center'}} onClick={handleOpen}>Nova solicitação</Button>
        <Modal
           open={open}
           onClose={handleClose}
@@ -219,10 +219,16 @@ export const DashboardHeader = (props: DashboardHeaderProps): React.ReactElement
                 color='secondary'
                 size='small'
               />
+              <div style={{display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', marginTop: '10px'}}>
+                <Button style={{backgroundColor: 'white', color: 'black'}} type="submit" variant="contained" color="primary">
+              Criar Solicitação
+              </Button>
+
+              </div>
             </form>
           </Box>
         </Modal>
-      </Stack> 
+      </div> 
     </>
   );
 }

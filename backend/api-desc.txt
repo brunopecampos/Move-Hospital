@@ -3,6 +3,8 @@ Hospital:
 	POST: /hospital/{hospitalId}/request/
 		input: json: {
 			ambulance_type: string,
+			origin_name: string,
+			origin_address: string,
 			destination_name: string,
 			destination_address: string,
 			description: string,
@@ -22,6 +24,8 @@ Hospital:
 	GET: /hospital/{hospitalId}/request/created
 		output: json: [{
 			ambulance_type: string,
+			origin_name: string,
+			origin_address: string,
 			destination_name: string,
 			destination_address: string,
 			description: string,
@@ -30,7 +34,7 @@ Hospital:
 			responsible_name: string,
 			responsible_phone: sring
 			patient_name: string,
-			patient_age: string,
+			patient_age: number,
 			patient_gender: string,
 			patient_clinical_condition: string,
 			patient_phone: string,
@@ -55,6 +59,8 @@ Hospital:
 	GET: /hospital/{hospitalId}/request/scheduled
 		output: json: [{
 			ambulance_type: string,
+			origin_name: string,
+			origin_address: string,
 			destination_name: string,
 			destination_address: string,
 			description: string,
@@ -79,6 +85,8 @@ Hospital:
 	GET: /hospital/{hospitalId}/request/ongoing
 		output: json: [{
 			ambulance_type: string,
+			origin_name: string,
+			origin_address: string,
 			destination_name: string,
 			destination_address: string,
 			description: string,
@@ -104,6 +112,8 @@ Hospital:
 	GET: /hospital/{hospitalId}/request/concluded
 		output: json: [{
 			ambulance_type: string,
+			origin_name: string,
+			origin_address: string,
 			destination_name: string,
 			destination_address: string,
 			description: string,
@@ -119,9 +129,6 @@ Hospital:
 			patient_observations: string,
 			provider_name: string,
 			price: real,
-			driver: string,
-			ambulance_model: string,
-			ambulance_license_plate: string,
 			avalitaion: real
 		}]
 
@@ -142,7 +149,7 @@ Hospital:
 
 Telas Empresas:
 
-	/*  crete an ambulance */
+	/*  create an ambulance */
 	POST: /provider/{providerId}/ambulance/
 		input: json: {
 			factory_model: string,
@@ -150,33 +157,23 @@ Telas Empresas:
 			ambulance_type: string,
 		}
 	
-	GET: /privider/{providerId}/ambulance
+	/* get provider's ambulances */
+	GET: /provider/{providerId}/ambulance
 		output: json: [
 			{
+				id: string,
 				factory_model: string,
 				license_plate: string,
 				ambulance_type: string,
 			}
 		]
 
-	POST: /provider/{providerId}/driver
-		input: json: {
-			name: string,
-			cpf: string,
-		}
-
-	GET: /provider/{providerId}/driver
-		output: json: [
-			{
-				name: string,
-				cpg: stirng
-			}
-		]
-
-	/* Gets all request in the system */
+	/* Gets all requests in the system */
 	GET: /provider/{provider_id}/request/created
 		output: json: [ {
 			ambulance_type: string,
+			origin_name: string,
+			origin_address: string,
 			destination_name: string,
 			destination_address: string,
 			description: string,
@@ -191,14 +188,40 @@ Telas Empresas:
 	POST: /provider/{providerId}/offer/{requestId}
 		input: json: {
 			price: real,
-			ambulance_id: integer,
-			driver_id: 
+			ambulance_id,
+			driver_name: string;
+			driver_cpf: string;
 		}
+
+	/* gets pending offers */
+	GET: /provider/{providerId}/offer/pending
+		output: json {
+			price: real,
+			hospital_name,
+			origin_address: string,
+			destination_address: string
+			transference_time: datetime,
+			driver_name: string,
+			ambulance_model: string
+			ambulance_license_plate: string
+		}
+
+	/* gets denied or expired offers */
+	GET /provider/{providerId}/offer/denied
+		output: json {
+			price: real,
+			driver_name: string,
+			transference_time: datetime,
+			destination_name,
+		}
+	
 
 	/* gets all requests which have accepted offers made by the provider and are not currently happening */
 	GET: /provider/{providerId}/request/scheduled
 		output: json: [{
 			ambulance_type: string,
+			origin_name: string,
+			origin_address: string,
 			destination_name: string,
 			destination_address: string,
 			description: string,
@@ -223,6 +246,8 @@ Telas Empresas:
 	GET: /provider/{providerId}/request/ongoing
 		output: [{
 			ambulance_type: string,
+			origin_name: string,
+			origin_address: string,
 			destination_name: string,
 			destination_address: string,
 			description: string,
@@ -252,6 +277,8 @@ Telas Empresas:
 	GET: /provider/{providerId}/request/concluded
 		json: [{
 			ambulance_type: string,
+			origin_name: string,
+			origin_address: string,
 			destination_name: string,
 			destination_address: string,
 			description: string,
@@ -282,3 +309,19 @@ Telas Empresas:
 			employee_name: string,
 			email: string
 		}
+
+request status: "peding", "expired", "scheduled", "canceled", "ongoing", "patient_collected", "finished"
+
+	      |-> expired
+pending --|               |-> canceled
+		  |-> scheduled --|
+		  				  |-> ongoing -> patient_collected -> finished
+
+
+offer status: "pending", "denied", "accepted", "expired"
+
+		  |-> denied
+		  |
+pending --|-> accepted
+		  |
+		  |-> expired

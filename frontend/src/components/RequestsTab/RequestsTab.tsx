@@ -16,12 +16,17 @@ const hResquests: Request[] = [{
     responsible_name: "aaaaa",
     created: new Date(),
     transference_time: new Date(),
+    origin_name: "alksdfjlsd",
+    origin_address: "sdfdlskjf",
     destination_address: "rua aaaaaaaaaaa numero aaaaaaa",
     destination_name: "hospital aaaaaaaa",
     status: "ongoing",
-    hospital_id: "aaaaa",
-    patient_id: "aaaaaa",
-    offer_id: "aaaaaa",
+    patient_name: "aaaa",
+    patient_age: 10,
+    patient_gender: "m",
+    patient_clinical_condition: "blabla",
+    patient_phone: "123123123",
+    patient_observations: "blelble",
     responsible_phone: "aaaaaaaaa"
 },
 {
@@ -34,31 +39,20 @@ const hResquests: Request[] = [{
     destination_address: "rua bbbbbbbbbbb numero bbbbbbb",
     destination_name: "hospital bbbbbbbb",
     status: "ongoing",
-    hospital_id: "bbbbb",
-    patient_id: "bbbbbbb",
-    offer_id: "bbbbbb",
-    responsible_phone: "bbbbbbbbb"
+    patient_name: "aaaa",
+    patient_age: 10,
+    patient_gender: "m",
+    patient_clinical_condition: "blabla",
+    patient_phone: "123123123",
+    patient_observations: "blelble",
+    responsible_phone: "bbbbbbbbb",
+    origin_name: "alksdfjlsd",
+    origin_address: "sdfdlskjf",
 },
-{
-    id: "bbb",
-    description: "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
-    ambulance_type: "bbbb",
-    responsible_name: "bbbbb",
-    created: new Date(),
-    transference_time: new Date(),
-    destination_address: "rua bbbbbbbbbbb numero bbbbbbb",
-    destination_name: "hospital bbbbbbbb",
-    status: "created",
-    hospital_id: "bbbbb",
-    patient_id: "bbbbbbb",
-    offer_id: "bbbbbb",
-    responsible_phone: "bbbbbbbbb"
-}
 ]
 
 export interface RequestsTabProps {
   user: User,
-  header?: boolean
   type: string
 }
 
@@ -67,6 +61,10 @@ export const RequestsTab = (props: RequestsTabProps): React.ReactElement => {
 
   const createUrl = (user: User) => {
     return "//localhost:5000/" + user.user_type + props.type
+  }
+
+  const isHospital = (user: User) => {
+    return user.user_type == "hospital"
   }
 
   useEffect(() => {
@@ -83,7 +81,7 @@ export const RequestsTab = (props: RequestsTabProps): React.ReactElement => {
 
   const listRequests = requests.map((item, index) => (
     <>
-      <SimpleRequest request={item}></SimpleRequest>
+      <SimpleRequest request={item} isHospital={isHospital(props.user)} type={props.type} ></SimpleRequest>
       <hr />
     </>
   ))  
@@ -94,12 +92,11 @@ export const RequestsTab = (props: RequestsTabProps): React.ReactElement => {
     }}>
       <Container>
         {
-          props.header ?
-            <DashboardHeader username={props.user.email} />
+          isHospital(props.user) ?
+            <DashboardHeader username={props.user.name} />
           : <></>
         }
         <Card elevation={3}  sx={{
-          marginTop: 10,
           padding: 5
         }}>
           <span style={{
