@@ -42,7 +42,7 @@ class Request(db.Model):
     transference_time = db.Column(db.TIMESTAMP, nullable=False)
     destination_address = db.Column(db.Text, nullable=False)
     destination_name = db.Column(db.Text, nullable=False)
-    status = db.Column(db.String, nullable=False, default='created')
+    status = db.Column(db.String, nullable=False, default='pending')
     hospital_id = db.Column(db.Integer, db.ForeignKey('hospital.id'), nullable=True)
     patient_id = db.Column(db.Integer, db.ForeignKey('patient.id'), nullable=True)
     avaliation = db.Column(db.Float, nullable=True)
@@ -79,9 +79,8 @@ class Offer(db.Model):
     __tablename__ = 'offer'
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    code = db.Column(db.Text, nullable=False)
     price = db.Column(db.Float, nullable=False)
-    status = db.Column(db.String, nullable=False, default="created")
+    status = db.Column(db.String, nullable=False, default="pending")
     created = db.Column(db.TIMESTAMP, nullable=False, server_default=db.func.current_timestamp())
     provider_id = db.Column(db.Integer, db.ForeignKey('provider.id'), nullable=True)
     driver_id = db.Column(db.Integer, db.ForeignKey('driver.id'), nullable=True)
