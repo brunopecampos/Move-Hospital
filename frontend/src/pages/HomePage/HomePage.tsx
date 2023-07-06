@@ -26,7 +26,8 @@ const HomePage: React.FC = () => {
     })();
   }, []);
 
-  return user ? user.user_type == "hospital" ? <HospitalDashboard logout={logoutUser} user={user} /> : <ProviderDashboard logout={logoutUser} user={user} /> : <></>
+  return user ? user.user_type == "provider" ? <ProviderDashboard logout={logoutUser} user={user} /> : <HospitalDashboard logout={logoutUser} user={user} /> : <></>
+
 };
 
 export default HomePage;

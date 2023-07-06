@@ -5,7 +5,7 @@ import Tab from '@mui/material/Tab';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import { RequestsTab } from '../RequestsTab/RequestsTab';
-import { User, Hospital } from '../../types';
+import { User } from '../../types';
 import { ProfileForm } from '../ProfileForm/Profile';
 import { OffersTab } from '../OfferTab/OfferTab';
 
@@ -44,33 +44,14 @@ function a11yProps(index: number) {
 
 interface ProviderDashboardProps {
   user: User | null;
-  logout: () => {};
+  logout: () => void;
 }
 
-const ProviderDashboard  = (props: ProviderDashboardProps): React.ReactElement => {
-  const [value, setValue] = React.useState(1);
-  const [name, setName] = React.useState('');
-  const [cnpj, setCnpj] = React.useState('');
-  const [address, setAddress] = React.useState('');
-  const [email, setEmail] = React.useState('');
-  const [employee_name, setEmployeeName] = React.useState('');
+const ProviderDashboard: React.FC<ProviderDashboardProps> = ({ user, logout }) => {
+  const [value, setValue] = React.useState(0);
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
-  };
-
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-
-    const hospital: Hospital = {
-      name,
-      cnpj,
-      address,
-      email,
-      employee_name
-    };
-
-    console.log(hospital);
   };
 
   return (
@@ -87,58 +68,53 @@ const ProviderDashboard  = (props: ProviderDashboardProps): React.ReactElement =
         sx={{ borderRight: 1, borderColor: 'divider', backgroundColor: '#504DA6', fontSize: "30px"}}
       >
         <img src={loginImage} alt="Description of the image" style={{width: "80%", alignSelf: 'center'}}/>
-        <Tab label="Transferências em Andamento" {...a11yProps(1)} />
-        <Tab label="Novas transferências" {...a11yProps(2)} />
-        <Tab label="Suas ofertas" {...a11yProps(3)} />
-        <Tab label="Transferências marcadas" {...a11yProps(4)} />
-        <Tab label="Histórico" {...a11yProps(5)} />
-        <Tab label="Meu Perfil" {...a11yProps(6)} />
-        <Tab label="Sair" {...a11yProps(7)} onClick={() => props.logout()} />
+        <Tab label="Transferências em Andamento" {...a11yProps(0)} />
+        <Tab label="Novas transferências" {...a11yProps(1)} />
+        <Tab label="Suas ofertas" {...a11yProps(2)} />
+        <Tab label="Transferências marcadas" {...a11yProps(3)} />
+        <Tab label="Histórico" {...a11yProps(4)} />
+        <Tab label="Meu Perfil" {...a11yProps(5)} />
+        <Tab label="Frota" {...a11yProps(6)} />
+        <Tab label="Sair" {...a11yProps(7)} onClick={logout} />
       </Tabs>
-      <TabPanel value={value} index={0}></TabPanel>
+
+      <TabPanel value={value} index={0}>
+        {user && <RequestsTab user={user} type="ongoing" />}
+      </TabPanel>
       <TabPanel value={value} index={1}>
-        {
-          props.user ?
-          <RequestsTab user={props.user} type="ongoing" />
-          : <></>
-        }
+        {user && <RequestsTab user={user} type="pending" />}
       </TabPanel>
       <TabPanel value={value} index={2}>
-        {
-          props.user ?
-          <RequestsTab user={props.user} type="pending" />
-          : <></>
-        }
+        {user && <OffersTab type="accepted" />}
       </TabPanel>
       <TabPanel value={value} index={3}>
-        {
-          props.user ?
-          <OffersTab type="accepted" />
-          : <></>
-        }
-      </TabPanel>
-      <TabPanel value={value} index={4}>
-        {
-          props.user ?
-          <RequestsTab user={props.user} type="scheduled" />
-          : <></>
-        }
-      </TabPanel>
-      <TabPanel value={value} index={5}>
-        {
-          props.user ?
-          <RequestsTab user={props.user} type="finished" />
-          : <></>
-        }
-      </TabPanel>
-      <TabPanel value={value} index={6}>
-      {
-          props.user ?
-          <ProfileForm />
-          : <></>
-        }
-      </TabPanel>
-      <TabPanel value={value} index={7}></TabPanel>
+  {
+    user ?
+    <RequestsTab user={user} type="scheduled" />
+    : <></>
+  }
+</TabPanel>
+<TabPanel value={value} index={4}>
+  {
+    user ?
+    <RequestsTab user={user} type="finished" />
+    : <></>
+  }
+</TabPanel>
+<TabPanel value={value} index={5}>
+{
+    user ?
+    <ProfileForm />
+    : <></>
+  }
+</TabPanel>
+<TabPanel value={value} index={6}>
+{
+    user ?
+    <ProfileForm />
+    : <></>
+  }
+</TabPanel>
     </Box>
   );
 }

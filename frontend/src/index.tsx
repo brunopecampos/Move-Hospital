@@ -5,6 +5,7 @@ import Router from "./Router";
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import '@fontsource/poppins';
 
+
 const theme = createTheme({
   palette: {
     primary: {
@@ -18,12 +19,14 @@ const theme = createTheme({
     fontFamily: 'Poppins, sans-serif',
   },
 });
-
+document.title = 'MoveHospital App';
 ReactDOM.render(
+  
   <React.StrictMode>
     <ThemeProvider theme={theme}>
       <Router />
    </ThemeProvider>
   </React.StrictMode>,
   document.getElementById("root")
+ 
 );
