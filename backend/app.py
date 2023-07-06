@@ -143,7 +143,7 @@ def create_request(hospitalId):
 
     return jsonify({'message': 'Request created successfully'}), 201
 
-# Get newly created requests of status "created"
+# Get requests with status "pending"
 @app.route('/hospital/<int:hospitalId>/request/created', methods=['GET'])
 def get_created_requests(hospitalId):
     hospital = Hospital.query.get(hospitalId)
@@ -173,6 +173,144 @@ def get_created_requests(hospitalId):
 
     return jsonify(result)
 
+# Get requests with status "scheduled"
+@app.route('/hospital/<int:hospitalId>/request/scheduled', methods=['GET'])
+def get_scheduled_requests(hospitalId):
+    hospital = Hospital.query.get(hospitalId)
+    requests = Request.query.filter_by(hospital_id=hospitalId,status='scheduled').all()
+    result = []
+    for request_item in requests:
+        patient = Patient.query.get(request_item.patient_id)
+        offer = Offer.query.filter_by(request_id=request_item.id,status='accepted')
+        provider = Provider.query.get(offer.provider_id)
+        driver = Driver.query.get(offer.driver_id)
+        ambulance = Ambulance.query.get(offer.ambulance_id)
+        request_data = {
+            'ambulance_type': request_item.ambulance_type,
+            'origin_name': hospital.name,
+            'origin_address': hospital.address,
+            'destination_name': request_item.destination_name,
+            'destination_address': request_item.destination_address,
+            'description': request_item.description,
+            'transference_time': request_item.transference_time,
+            'created': request_item.created,
+            'responsible_name': request_item.responsible_name,
+            'responsible_phone': request_item.responsible_phone,
+            'patient_name': patient.name,
+            'patient_age': patient.age,
+            'patient_gender': patient.gender,
+            'patient_clinical_condition': patient.clinical_condition,
+            'patient_phone': patient.phone,
+            'patient_observations': patient.observations,
+            'provider_name': provider.name,
+            'price': offer.price,
+            'driver_name': driver.name,
+            'ambulance_model': ambulance.factory_model,
+            'ambulance_license_plate': ambulance.license_plate
+        }
+        result.append(request_data)
+
+    return jsonify(result)
+
+# Get requests with status "ongoing"
+@app.route('/hospital/<int:hospitalId>/request/ongoing', methods=['GET'])
+def get_ongoing_requests(hospitalId):
+    hospital = Hospital.query.get(hospitalId)
+    requests = Request.query.filter_by(hospital_id=hospitalId, status='ongoing').all()
+    result = []
+    for request_item in requests:
+        patient = Patient.query.get(request_item.patient_id)
+        offer = Offer.query.filter_by(request_id=request_item.id,status='accepted')
+        provider = Provider.query.get(offer.provider_id)
+        driver = Driver.query.get(offer.driver_id)
+        ambulance = Ambulance.query.get(offer.ambulance_id)
+        status_text = "Em andamento" if request_item.status=='ongoing' else "Paciente coletado"
+        request_data = {
+            'ambulance_type': request_item.ambulance_type,
+            'origin_name': hospital.name,
+            'origin_address': hospital.address,
+            'destination_name': request_item.destination_name,
+            'destination_address': request_item.destination_address,
+            'description': request_item.description,
+            'transference_time': request_item.transference_time,
+            'created': request_item.created,
+            'responsible_name': request_item.responsible_name,
+            'responsible_phone': request_item.responsible_phone,
+            'patient_name': patient.name,
+            'patient_age': patient.age,
+            'patient_gender': patient.gender,
+            'patient_clinical_condition': patient.clinical_condition,
+            'patient_phone': patient.phone,
+            'patient_observations': patient.observations,
+            'provider_name': provider.name,
+            'price': offer.price,
+            'driver_name': driver.name,
+            'ambulance_model': ambulance.factory_model,
+            'ambulance_license_plate': ambulance.license_plate,
+            'status': status_text
+        }
+        result.append(request_data)
+
+    return jsonify(result)
+
+# Get requests with status "finished"
+@app.route('/hospital/<int:hospitalId>/request/concluded', methods=['GET'])
+def get_concluded_requests(hospitalId):
+    hospital = Hospital.query.get(hospitalId)
+    requests = Request.query.filter_by(hospital_id=hospitalId, status='finished').all()
+    result = []
+    for request_item in requests:
+        patient = Patient.query.get(request_item.patient_id)
+        offer = Offer.query.filter_by(request_id=request_item.id,status='accepted')
+        provider = Provider.query.get(offer.provider_id)
+        driver = Driver.query.get(offer.driver_id)
+        ambulance = Ambulance.query.get(offer.ambulance_id)
+        request_data = {
+            'ambulance_type': request_item.ambulance_type,
+            'origin_name': hospital.name,
+            'origin_address': hospital.address,
+            'destination_name': request_item.destination_name,
+            'destination_address': request_item.destination_address,
+            'description': request_item.description,
+            'transference_time': request_item.transference_time,
+            'created': request_item.created,
+            'responsible_name': request_item.responsible_name,
+            'responsible_phone': request_item.responsible_phone,
+            'patient_name': patient.name,
+            'patient_age': patient.age,
+            'patient_gender': patient.gender,
+            'patient_clinical_condition': patient.clinical_condition,
+            'patient_phone': patient.phone,
+            'patient_observations': patient.observations,
+            'provider_name': provider.name,
+            'price': offer.price,
+            'avaliation': request.avaliation
+        }
+        result.append(request_data)
+
+    return jsonify(result)
+
+@app.route('/hospital/<hospitalId>/request/<int:requestId>', methods=['PATCH'])
+def set_request_rating(hospitalId):
+    request = Request.query.get(requestId)
+    request_data = {
+        'rating': request.avaliation
+    }
+
+    return jsonify(request_data)
+
+@app.route('/hospital/<int:hospitalId>/profile', methods=['GET'])
+def get_hospital_profile(hospitalId):
+    hospital = Hospital.query.get(hospitalId)
+    hospital_data = {
+        'name': hospital.name,
+        'cnpj': hospital.cnpj,
+        'address': hospital.address,
+        'employee_name': hospital.employee_name,
+        'email': hospital.email
+    }
+
+    return jsonify(hospital_data)
 
 ###### PROVIDER ENDPOINTS ######
 
