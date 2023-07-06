@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify, session
+from flask import Flask, request, jsonify, session, Response
 from flask_bcrypt import Bcrypt
 from flask_cors import CORS, cross_origin
 from flask_session import Session
@@ -298,6 +298,36 @@ def set_request_rating(hospitalId):
     }
 
     return jsonify(request_data)
+
+# Get all offers for a given request
+@app.route('/hospital/<int:hospitalId>/request/<int:requestId>/offer', methods=['GET'])
+def get_request_offers(hospitalId, requestId):
+    #offers = Offer.query.join(Request).filter_by(id=requestId, hospital_id=hospitalId).all()
+    offers = Offer.query.filter_by(request_id=requestId).all() #Faster version?
+    result = []
+    for offer_item in offers:
+        provider = Provider.query.get(offer_item.provider_id)
+        driver = Driver.query.get(offer_item.driver_id)
+        offer_data = {
+            'provider_name': provider.name,
+            'price': offer_item.price,
+            'driver_name': driver.name,
+            'created': offer_item.created,
+        }
+        result.append(offer_data)
+
+    return jsonify(result)
+
+# Approve request offer
+@app.route('/hospital/<int:hospitalId>/request/<int:requestId>/offer/<int:offerId>/approve', methods=['PATCH'])
+def set_request_offer_status(hospitalId, requestId, offerId):
+    offer = Offer.query.get(offerId)
+    if (offer):
+        offer.status = 'approved'
+        db.session.commit()
+        return Response(status=200)
+
+    return Response(status=400)
 
 @app.route('/hospital/<int:hospitalId>/profile', methods=['GET'])
 def get_hospital_profile(hospitalId):
