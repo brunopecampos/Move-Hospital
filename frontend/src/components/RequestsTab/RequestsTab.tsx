@@ -14,8 +14,8 @@ const hResquests: Request[] = [{
     description: "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
     ambulance_type: "aaaa",
     responsible_name: "aaaaa",
-    created: new Date(),
-    transference_time: new Date(),
+    created: "2023-07-05 19:11:55.998780",
+    transference_time: "sdf",
     origin_name: "alksdfjlsd",
     origin_address: "sdfdlskjf",
     destination_address: "rua aaaaaaaaaaa numero aaaaaaa",
@@ -34,8 +34,8 @@ const hResquests: Request[] = [{
     description: "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
     ambulance_type: "bbbb",
     responsible_name: "bbbbb",
-    created: new Date(),
-    transference_time: new Date(),
+    created: "2023-07-05 19:11:55.998780",
+    transference_time: "sdf",
     destination_address: "rua bbbbbbbbbbb numero bbbbbbb",
     destination_name: "hospital bbbbbbbb",
     status: "ongoing",
@@ -57,7 +57,25 @@ export interface RequestsTabProps {
 }
 
 export const RequestsTab = (props: RequestsTabProps): React.ReactElement => {
-  const [requests, setRequests] = useState<Request[]>(hResquests)
+  const [requests, setRequests] = useState<Request[]>([])
+
+  const getUrl = () => {
+    const base = "//localhost:5000/";
+    return base + props.user.user_type + "/" + props.user.id + "/request/" + props.type;
+  }
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const url = getUrl()
+        const resp = await httpClient.get(url);
+        setRequests(resp.data)
+        console.log(requests)
+      } catch (error) {
+        alert("Error getting requests")
+      }
+    })();
+  }, []);
 
   const createUrl = (user: User) => {
     return "//localhost:5000/" + user.user_type + props.type
@@ -82,6 +100,7 @@ export const RequestsTab = (props: RequestsTabProps): React.ReactElement => {
   const listRequests = requests.map((item, index) => (
     <>
       <SimpleRequest request={item} isHospital={isHospital(props.user)} type={props.type} ></SimpleRequest>
+      n
       <hr />
     </>
   ))  
@@ -93,7 +112,7 @@ export const RequestsTab = (props: RequestsTabProps): React.ReactElement => {
       <Container>
         {
           isHospital(props.user) ?
-            <DashboardHeader username={props.user.name} />
+            <DashboardHeader userId={props.user.id} username={props.user.name} />
           : <></>
         }
         <Card elevation={3}  sx={{

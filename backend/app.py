@@ -104,7 +104,7 @@ def register_hospital():
     return register_user(request, Hospital)
 
 ###### HOSPITAL ENDPOINTS ######
-@app.route('/hospital/<int:hospitalId>/request/', methods=['POST'])
+@app.route('/hospital/<int:hospitalId>/request', methods=['POST'])
 def create_request(hospitalId):
     data = request.json
     # Extract data from the request JSON
@@ -144,7 +144,7 @@ def create_request(hospitalId):
     return jsonify({'message': 'Request created successfully'}), 201
 
 # Get requests with status "pending"
-@app.route('/hospital/<int:hospitalId>/request/created', methods=['GET'])
+@app.route('/hospital/<int:hospitalId>/request/pending', methods=['GET'])
 def get_created_requests(hospitalId):
     hospital = Hospital.query.get(hospitalId)
     requests = Request.query.filter_by(hospital_id=hospitalId, status='pending').all()
@@ -390,7 +390,7 @@ def get_provider_ambulances(providerId):
     return jsonify(result)
 
 # Get all system's requests
-@app.route('/provider/<int:providerId>/request/created', methods=['GET'])
+@app.route('/provider/<int:providerId>/request/pending', methods=['GET'])
 def get_all_requests(providerId):
     requests = Request.query.all()
     result = []

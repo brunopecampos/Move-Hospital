@@ -108,7 +108,7 @@ export const SimpleRequest = (props: SimpleRequestProps): React.ReactElement => 
         <Stack direction="row" height={100} alignItems='center'>
           <RequestTextField title="Nome do responsável" content={props.request.responsible_name}></RequestTextField>
           <RequestTextField title="Telefone do Responsável" content={props.request.responsible_phone}></RequestTextField>
-          <RequestTextField title="Criação da Transferência" content={props.request.created.toDateString()}></RequestTextField>
+          <RequestTextField title="Criação da Transferência" content={props.request.created}></RequestTextField>
           <RequestTextField title="Tipo de Ambulância" content={provider}></RequestTextField>
         </Stack>
 

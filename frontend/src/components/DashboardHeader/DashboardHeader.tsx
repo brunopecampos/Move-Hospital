@@ -1,8 +1,10 @@
 import { Stack, Button, Modal, Box, Typography, TextField } from '@mui/material';
 import { useState } from 'react';
+import httpClient from "../../httpClient";
 
 interface DashboardHeaderProps {
     username: string
+    userId: string;
 }
 
 export const DashboardHeader = (props: DashboardHeaderProps): React.ReactElement => {
@@ -15,7 +17,7 @@ export const DashboardHeader = (props: DashboardHeaderProps): React.ReactElement
   const [ambulanceType, setAmbulanceType] = useState<string>("")
   const [responsibleName, setResponsibleName] = useState<string>("")
   const [responsiblePhone, setResponsiblePhone] = useState<string>("")
-  const [transferenceTime, setTransferenceTime] = useState<Date>(new Date())
+  const [transferenceTime, setTransferenceTime] = useState<string>("")
   const [destinationAddress, setDestinationAddress] = useState<string>("")
   const [destinationName, setDestinationName] = useState<string>("")
 
@@ -26,8 +28,30 @@ export const DashboardHeader = (props: DashboardHeaderProps): React.ReactElement
   const [patientPhone, setPatientPhone] = useState<string>("")
   const [patientObservations, setPatientObservations] = useState<string>("")
 
-  const handleSubmit = () => {
+  const handleSubmit = async (event: any) => {
+    event.preventDefault();
+    try {
+      let url = "//localhost:5000/hospital/" + props.userId + "/request"
+      const resp = await httpClient.post(url, {
+        "ambulance_type": ambulanceType,
+			  "destination_name": destinationName,
+			  "destination_address": destinationAddress,
+			  "description": description,
+			  "transference_time": transferenceTime,
+			  "responsible_name": responsibleName,
+			  "responsible_phone": responsiblePhone,
+			  "patient_name": patientName,
+			  "patient_age": patientAge,
+			  "patient_gender": patientGender,
+			  "patient_clinical_condition": patientClinicalCondition,
+			  "patient_phone": patientPhone,
+			  "patient_observations": patientObservations,
+    });
+    handleClose()
 
+    } catch (error: any) {
+      alert("Erro ao criar transferência");
+    }
   }
 
   const modalStyle = {
@@ -61,7 +85,7 @@ export const DashboardHeader = (props: DashboardHeaderProps): React.ReactElement
           aria-describedby="modal-modal-description"
         >
           <Box sx={modalStyle}>
-            <form onSubmit={() => handleSubmit()}>
+            <form onSubmit={(e) => handleSubmit(e)}>
               <Typography color="white" id="modal-modal-title" variant="h6" component="h2">
                 Detalhes da Solicitação
               </Typography>
@@ -114,10 +138,13 @@ export const DashboardHeader = (props: DashboardHeaderProps): React.ReactElement
               <Stack direction="row" spacing={2}>
               <TextField
                 label="Data e Horário da Transferência"
-                type="name"
+                type="datetime-local"
                 fullWidth
                 required
-                onChange={(e) => {/* setTransferenceTime(e.target.value)*/} }
+                onChange={(e) => {
+                  const inputDateTime = new Date(e.target.value);
+                  const formattedDateTime = inputDateTime.toISOString().slice(0, 19).replace('T', ' ');
+                  setTransferenceTime(formattedDateTime);}}
                 style={textFieldStyle}
                 variant="filled"
                 color='secondary'
