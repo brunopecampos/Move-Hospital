@@ -329,18 +329,22 @@ def set_request_offer_status(hospitalId, requestId, offerId):
 
     return Response(status=400)
 
+# Get hospital profile information    
 @app.route('/hospital/<int:hospitalId>/profile', methods=['GET'])
 def get_hospital_profile(hospitalId):
     hospital = Hospital.query.get(hospitalId)
-    hospital_data = {
-        'name': hospital.name,
-        'cnpj': hospital.cnpj,
-        'address': hospital.address,
-        'employee_name': hospital.employee_name,
-        'email': hospital.email
-    }
+    if(hospital):
+        hospital_data = {
+            'name': hospital.name,
+            'cnpj': hospital.cnpj,
+            'address': hospital.address,
+            'employee_name': hospital.employee_name,
+            'email': hospital.email
+        }
 
-    return jsonify(hospital_data)
+        return jsonify(hospital_data)
+    else:
+        return Response(status=400)
 
 ###### PROVIDER ENDPOINTS ######
 
@@ -469,6 +473,174 @@ def get_pending_offers(providerId):
         result.append(offer_data)
 
     return jsonify(result)
+
+# Get denied or expired offers
+@app.route('/provider/<int:providerId>/offer/denied', methods=['GET'])
+def get_denied_expired_offers(providerId):
+    provider = Provider.query.get(providerId)
+    offers = Offer.query.filter((Offer.provider==provider) & ((Offer.status=='denied') | (Offer.status=='expired'))).all()
+    result = []
+    for offer in offers:
+        request = Request.query.get(offer.request_id)
+        hospital = Hospital.query.get(request.hospital_id)
+        ambulance = Ambulance.query.get(offer.ambulance_id)
+        driver = Driver.query.get(offer.driver_id)
+        offer_data = {
+            'price': offer.price,
+            'destination_address': request.destination_address,
+            'transference_time': request.transference_time,
+            'driver_name': driver.name,
+        }
+        result.append(offer_data)
+
+    return jsonify(result)
+
+# Get requests scheduled to the provider
+@app.route('/provider/<int:providerId>/request/scheduled', methods=['GET'])
+def get_provider_scheduled_requests(providerId):
+    provider = Provider.query.get(providerId)
+    offers = Offer.query.filter(Offer.provider_id==providerId).join(Request, Offer.request_id==Request.id)\
+            .filter(Request.status=='scheduled').all()
+    result = []
+    for offer in offers:
+        request = Request.query.get(offer.request_id)
+        hospital = Hospital.query.get(request.hospital_id)
+        ambulance = Ambulance.query.get(offer.ambulance_id)
+        driver = Driver.query.get(offer.driver_id)
+        offer_data = {
+            'ambulance_type': request_item.ambulance_type,
+            'origin_name': hospital.name,
+            'origin_address': hospital.address,
+            'destination_name': request_item.destination_name,
+            'destination_address': request_item.destination_address,
+            'description': request_item.description,
+            'transference_time': request_item.transference_time,
+            'created': request_item.created,
+            'responsible_name': request_item.responsible_name,
+            'responsible_phone': request_item.responsible_phone,
+            'patient_name': patient.name,
+            'patient_age': patient.age,
+            'patient_gender': patient.gender,
+            'patient_clinical_condition': patient.clinical_condition,
+            'patient_phone': patient.phone,
+            'patient_observations': patient.observations,
+            'provider_name': provider.name,
+            'price': offer.price,
+            'driver_name': driver.name,
+            'ambulance_model': ambulance.factory_model,
+            'ambulance_license_plate': ambulance.license_plate
+        }
+        result.append(offer_data)
+
+    return jsonify(result)
+
+# Get ongoing requests from the provider
+@app.route('/provider/<int:providerId>/request/ongoing', methods=['GET'])
+def get_provider_ongoing_requests(providerId):
+    provider = Provider.query.get(providerId)
+    offers = Offer.query.filter_by(provider_id=providerId).join(Request, Offer.request_id==Request.id)\
+            .filter((Request.status=='ongoing') | (Request.status=='patient_collected')).all()
+    result = []
+    for offer in offers:
+        request = Request.query.get(offer.request_id)
+        hospital = Hospital.query.get(request.hospital_id)
+        ambulance = Ambulance.query.get(offer.ambulance_id)
+        driver = Driver.query.get(offer.driver_id)
+        request_data = {
+            'ambulance_type': request_item.ambulance_type,
+            'origin_name': hospital.name,
+            'origin_address': hospital.address,
+            'destination_name': request_item.destination_name,
+            'destination_address': request_item.destination_address,
+            'description': request_item.description,
+            'transference_time': request_item.transference_time,
+            'created': request_item.created,
+            'responsible_name': request_item.responsible_name,
+            'responsible_phone': request_item.responsible_phone,
+            'patient_name': patient.name,
+            'patient_age': patient.age,
+            'patient_gender': patient.gender,
+            'patient_clinical_condition': patient.clinical_condition,
+            'patient_phone': patient.phone,
+            'patient_observations': patient.observations,
+            'provider_name': provider.name,
+            'price': offer.price,
+            'driver_name': driver.name,
+            'ambulance_model': ambulance.factory_model,
+            'ambulance_license_plate': ambulance.license_plate,
+            'status': request.status
+        }
+        result.append(request_data)
+
+    return jsonify(result)
+
+# Conclude a request
+@app.route('/provider/<int:providerId>/request/<int:requestId>/conclude', methods=['PATCH'])
+def set_request_concluded(providerId, requestId):
+    request = Request.query.get(requestId)
+    if (request):
+        request.status = 'finished'
+        db.session.commit()
+        return Response(status=200)
+
+    return Response(status=400)
+
+# Get concluded requests from the provider
+@app.route('/provider/<int:providerId>/request/concluded', methods=['GET'])
+def get_provider_concluded_requests(providerId):
+    provider = Provider.query.get(providerId)
+    offers = Offer.query.filter(Offer.provider_id==providerId).join(Request, Offer.request_id==Request.id)\
+            .filter(Request.status=='finished').all()
+    result = []
+    for offer in offers:
+        request = Request.query.get(offer.request_id)
+        hospital = Hospital.query.get(request.hospital_id)
+        ambulance = Ambulance.query.get(offer.ambulance_id)
+        driver = Driver.query.get(offer.driver_id)
+        request_data = {
+            'ambulance_type': request_item.ambulance_type,
+            'origin_name': hospital.name,
+            'origin_address': hospital.address,
+            'destination_name': request_item.destination_name,
+            'destination_address': request_item.destination_address,
+            'description': request_item.description,
+            'transference_time': request_item.transference_time,
+            'created': request_item.created,
+            'responsible_name': request_item.responsible_name,
+            'responsible_phone': request_item.responsible_phone,
+            'patient_name': patient.name,
+            'patient_age': patient.age,
+            'patient_gender': patient.gender,
+            'patient_clinical_condition': patient.clinical_condition,
+            'patient_phone': patient.phone,
+            'patient_observations': patient.observations,
+            'provider_name': provider.name,
+            'price': offer.price,
+            'driver_name': driver.name,
+            'ambulance_model': ambulance.factory_model,
+            'ambulance_license_plate': ambulance.license_plate,
+            'avaliation': request.avaliation
+        }
+        result.append(request_data)
+
+    return jsonify(result)
+
+# Get provider profile information    
+@app.route('/provider/<int:providerId>/profile', methods=['GET'])
+def get_provider_profile(providerId):
+    provider = Provider.query.get(providerId)
+    if(provider):
+        provider_data = {
+            'name': provider.name,
+            'cnpj': provider.cnpj,
+            'address': provider.address,
+            'employee_name': provider.employee_name,
+            'email': provider.email
+        }
+
+        return jsonify(provider_data)
+    else:
+        return Response(status=400)
 
 @app.route("/register-provider", methods=["POST"])
 def register_provider():
