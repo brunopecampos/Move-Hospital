@@ -118,7 +118,7 @@ const HospitalDashboard  = (props: HospitalDashboardProps): React.ReactElement =
       <TabPanel value={value} index={4}>
         {
           props.user ?
-          <RequestsTab user={props.user} type="finished" />
+          <RequestsTab user={props.user} type="concluded" />
           : <></>
         }
       </TabPanel>

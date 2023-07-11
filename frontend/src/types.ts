@@ -13,8 +13,8 @@ export interface Request {
   destination_address: string;
   destination_name: string;
   description: string;
-  transference_time: Date;
-  created: Date;
+  transference_time: string;
+  created: string;
   responsible_name: string;
   responsible_phone: string;
 	patient_name: string,

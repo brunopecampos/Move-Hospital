@@ -27,5 +27,13 @@ services:
     volumes:
       - "./backend:/app"
 
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8000:8080
+    networks:
+      - mynetwork
+
 networks:
   mynetwork:
