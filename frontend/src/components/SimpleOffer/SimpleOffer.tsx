@@ -9,41 +9,23 @@ export interface SimpleOfferProps {
   offer: Offer
   offerIndex: number
   closeModal: () => void
+  request: Request
+  user: User
 }
 
 export const SimpleOffer = (props: SimpleOfferProps): React.ReactElement => 
 {
-  const acceptOffer = () => {
+  const acceptOffer = async () => {
     /* send request to accept offer */
 
-    props.closeModal()
-  }
+    try {
+      const url = "//localhost:5000/hospital/" + props.user.id + "/request/" + props.request.id + "/offer/" + props.offer.id + "/approve"; 
+      const resp = await httpClient.patch(url);
+      props.closeModal()
+    } catch (error) {
+      alert("Error accepting offer")
+    }
 
-  const checkNewOffers = () : Offer[] => {
-    /* fazer requisição para checar ofertas */
-    return [
-      {
-          code: "aaaaaa",
-          price: 50.00,
-          status: "created",
-          driver_name: "aaaa",
-          ambulance_id: "aaaa"
-      },
-      {
-          code: "bbbbbb",
-          price: 100.00,
-          status: "created",
-          driver_name: "aaaa",
-          ambulance_id: "aaaa"
-      }
-    ]
-  }
-
-  const showOffers = () => {
-    /* make request to accept offer */
-
-    /*  */
-    const offers = checkNewOffers()
   }
 
   return (

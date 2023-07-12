@@ -6,7 +6,7 @@ export interface User {
 }
 
 export interface Request {
-  id?: string;
+  id?: number;
   ambulance_type: string;
 	origin_name: string,
 	origin_address: string,
@@ -42,7 +42,7 @@ export interface Offer {
   code?: string;
 	origin_address?: string,
 	destination_address?: string
-	transference_time?: Date,
+	transference_time?: string,
   driver_name?: string;
 	ambulance_id?: string;
   status?: "created" | "scheduled" | "ongoing" | "finished"

@@ -2,43 +2,20 @@ import React, {useState, useEffect} from 'react';
 import httpClient from '../../httpClient';
 import { Ambulance, Offer, Request, User } from '../../types';
 import Box from '@mui/material/Box';
-import { Button, Container, Stack, Card } from '@mui/material';
+import { Button, Container, Stack, Card, Typography } from '@mui/material';
 import { ThemeContext } from '@emotion/react';
 import { SimpleRequest } from '../SimpleRequest/SimpleRequest';
 import { DashboardHeader } from '../DashboardHeader/DashboardHeader';
 import { OfferTextField, SimpleOffer } from '../SimpleOffer/SimpleOffer';
 import hospital1 from "../../images/hospital1.png"
 
-
-const hOffers: Offer[] = [{
-    price: 20.0,
-    hospital_name: "Hospital santa monica",
-    origin_address: "Rua corinto 512",
-    destination_address: "Rua Alvares Moraes 123",
-    transference_time: new Date(),
-    driver_name: "Joao",
-    ambulance_model: "Ducato",
-    ambulance_license_place: "ada-1231",
-},
-{
-    price: 60.0,
-    hospital_name: "Hospital 9 de Julho",
-    origin_address: "Rua Jose 512",
-    destination_address: "Rua Dias Morato123",
-    transference_time: new Date(),
-    driver_name: "Rafa",
-    ambulance_model: "Doblo",
-    ambulance_license_place: "jsd-1323",
-},
-]
-
-
 export interface OffersTabProps {
   type: string
+  user: User
 }
 
 export const OffersTab = (props: OffersTabProps): React.ReactElement => {
-  const [requests, setRequests] = useState<Offer[]>(hOffers)
+  const [offers, setOffers] = useState<Offer[]>([])
 
   const createUrl = (user: User) => {
     return "//localhost:5000/" + user.user_type + props.type
@@ -51,8 +28,10 @@ export const OffersTab = (props: OffersTabProps): React.ReactElement => {
   useEffect(() => {
     (async () => {
       try {
-        /*const resp = await httpClient.get(createUrl(props.user));
-        setRequests([...resp.data])*/
+
+        const url = "//localhost:5000/provider/" + props.user.id + "/offer/pending"
+        const resp = await httpClient.get(url)
+        setOffers(resp.data)
       } catch (error) {
         console.log("Not authenticated or error in request");
       }
@@ -60,7 +39,7 @@ export const OffersTab = (props: OffersTabProps): React.ReactElement => {
   }, []);
 
 
-  const listOffers = hOffers.map((item, index) => (
+  const listOffers = offers.map((item, index) => (
     <>
       <OfferItem offer={item} />
       <hr />
@@ -72,6 +51,7 @@ export const OffersTab = (props: OffersTabProps): React.ReactElement => {
   return (
     <Box sx={{
       padding: "50px",
+      minHeight: "600px"
     }}>
       <Container>
         <Card elevation={3}  sx={{
@@ -83,7 +63,13 @@ export const OffersTab = (props: OffersTabProps): React.ReactElement => {
             color: "#504DA6",
           }} >Ofertas em aberto</span>
           {
-            listOffers
+
+            offers.length > 0 ? listOffers :
+            <div style={{ width: "650px", height: 80, display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start', marginTop: '50px' }}>
+              <Typography id="modal-modal-title" variant="h6" component="h2">
+                Ainda não há nenhuma...
+              </Typography>
+            </div>
           }
         </Card>
       </Container>
@@ -109,7 +95,7 @@ const OfferItem = (props: {offer: Offer}) : React.ReactElement => {
             <OfferTextField title='Endereço de Destino' content={props.offer.destination_address} />
           </div>
           <div style={{width: "100%", height: 80, display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start', marginTop: '10px'}}>
-            <OfferTextField title='Hora da Transferência' content={props.offer.transference_time?.toDateString()} />
+            <OfferTextField title='Hora da Transferência' content={props.offer.transference_time} />
             <OfferTextField title='Ambulância' content={props.offer.ambulance_model + " - " + props.offer.ambulance_license_place} />
             <OfferTextField title='Motorista' content={props.offer.driver_name} />
           </div>

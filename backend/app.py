@@ -152,6 +152,7 @@ def get_created_requests(hospitalId):
     for request_item in requests:
         patient = Patient.query.get(request_item.patient_id)
         request_data = {
+            'id': request_item.id,
             'ambulance_type': request_item.ambulance_type,
             'origin_name': hospital.name,
             'origin_address': hospital.address,
@@ -178,14 +179,19 @@ def get_created_requests(hospitalId):
 def get_scheduled_requests(hospitalId):
     hospital = Hospital.query.get(hospitalId)
     requests = Request.query.filter_by(hospital_id=hospitalId,status='scheduled').all()
+    print("AAAAAAAAAAAAAA")
     result = []
     for request_item in requests:
+        print(request_item.id)
         patient = Patient.query.get(request_item.patient_id)
-        offer = Offer.query.filter_by(request_id=request_item.id,status='accepted')
+        print(type(patient))
+        offer = Offer.query.filter_by(request_id=request_item.id,status='approved').one()
+        #print("sdfjlksfjkldsjfksld")
         provider = Provider.query.get(offer.provider_id)
         driver = Driver.query.get(offer.driver_id)
         ambulance = Ambulance.query.get(offer.ambulance_id)
         request_data = {
+            'id': request_item.id,
             'ambulance_type': request_item.ambulance_type,
             'origin_name': hospital.name,
             'origin_address': hospital.address,
@@ -226,6 +232,7 @@ def get_ongoing_requests(hospitalId):
         ambulance = Ambulance.query.get(offer.ambulance_id)
         status_text = "Em andamento" if request_item.status=='ongoing' else "Paciente coletado"
         request_data = {
+            'id': request_item.id,
             'ambulance_type': request_item.ambulance_type,
             'origin_name': hospital.name,
             'origin_address': hospital.address,
@@ -261,43 +268,47 @@ def get_concluded_requests(hospitalId):
     result = []
     for request_item in requests:
         patient = Patient.query.get(request_item.patient_id)
-        offer = Offer.query.filter_by(request_id=request_item.id,status='accepted')
+        offer = Offer.query.filter_by(request_id=request_item.id).first()
         provider = Provider.query.get(offer.provider_id)
         driver = Driver.query.get(offer.driver_id)
         ambulance = Ambulance.query.get(offer.ambulance_id)
-        request_data = {
-            'ambulance_type': request_item.ambulance_type,
-            'origin_name': hospital.name,
-            'origin_address': hospital.address,
-            'destination_name': request_item.destination_name,
-            'destination_address': request_item.destination_address,
-            'description': request_item.description,
-            'transference_time': request_item.transference_time,
-            'created': request_item.created,
-            'responsible_name': request_item.responsible_name,
-            'responsible_phone': request_item.responsible_phone,
-            'patient_name': patient.name,
-            'patient_age': patient.age,
-            'patient_gender': patient.gender,
-            'patient_clinical_condition': patient.clinical_condition,
-            'patient_phone': patient.phone,
-            'patient_observations': patient.observations,
-            'provider_name': provider.name,
-            'price': offer.price,
-            'avaliation': request.avaliation
-        }
-        result.append(request_data)
+        if ambulance:
+            request_data = {
+                'id': request_item.id,
+                'ambulance_type': request_item.ambulance_type,
+                'origin_name': hospital.name,
+                'origin_address': hospital.address,
+                'destination_name': request_item.destination_name,
+                'destination_address': request_item.destination_address,
+                'description': request_item.description,
+                'transference_time': request_item.transference_time,
+                'created': request_item.created,
+                'responsible_name': request_item.responsible_name,
+                'responsible_phone': request_item.responsible_phone,
+                'patient_name': patient.name,
+                'patient_age': patient.age,
+                'patient_gender': patient.gender,
+                'patient_clinical_condition': patient.clinical_condition,
+                'patient_phone': patient.phone,
+                'patient_observations': patient.observations,
+                'provider_name': provider.name,
+                'price': offer.price,
+                'avaliation': request_item.avaliation
+            }
+            result.append(request_data)
 
     return jsonify(result)
 
 @app.route('/hospital/<hospitalId>/request/<int:requestId>', methods=['PATCH'])
-def set_request_rating(hospitalId):
-    request = Request.query.get(requestId)
-    request_data = {
-        'rating': request.avaliation
-    }
-
-    return jsonify(request_data)
+def set_request_rating(hospitalId, requestId):
+    request_item = Request.query.get(requestId)
+    data = request.json
+    if request_item:
+        request_item.avaliation = data['rating']
+        db.session.commit()
+        return Response(status=200)
+    
+    return Response(status=400)
 
 # Get all offers for a given request
 @app.route('/hospital/<int:hospitalId>/request/<int:requestId>/offer', methods=['GET'])
@@ -309,6 +320,7 @@ def get_request_offers(hospitalId, requestId):
         provider = Provider.query.get(offer_item.provider_id)
         driver = Driver.query.get(offer_item.driver_id)
         offer_data = {
+            'id': offer_item.id,
             'provider_name': provider.name,
             'price': offer_item.price,
             'driver_name': driver.name,
@@ -324,8 +336,13 @@ def set_request_offer_status(hospitalId, requestId, offerId):
     offer = Offer.query.get(offerId)
     if (offer):
         offer.status = 'approved'
-        db.session.commit()
-        return Response(status=200)
+        request_item = Request.query.get(requestId)
+        if request_item:
+            request_item.status = 'scheduled'
+            db.session.commit()
+            return Response(status=200)
+        return Response(status=400)
+
 
     return Response(status=400)
 
@@ -398,6 +415,7 @@ def get_all_requests(providerId):
         patient = Patient.query.get(request_item.patient_id)
         hospital = Hospital.query.get(request_item.hospital_id)
         request_data = {
+            'id': request_item.id,
             'ambulance_type': request_item.ambulance_type,
             'origin_name': hospital.name,
             'origin_address': hospital.address,
@@ -459,18 +477,20 @@ def get_pending_offers(providerId):
         request = Request.query.get(offer.request_id)
         hospital = Hospital.query.get(request.hospital_id)
         ambulance = Ambulance.query.get(offer.ambulance_id)
-        driver = Driver.query.get(offer.driver_id)
-        offer_data = {
-            'price': offer.price,
-            'hospital_name': hospital.name,
-            'origin_address': hospital.address,
-            'destination_address': request.destination_address,
-            'transference_time': request.transference_time,
-            'driver_name': driver.name,
-            'ambulance_model': ambulance.factory_model,
-            'ambulance_license_plate': ambulance.license_plate
-        }
-        result.append(offer_data)
+        if ambulance :
+            driver = Driver.query.get(offer.driver_id)
+            offer_data = {
+                'price': offer.price,
+                'hospital_name': hospital.name,
+                'origin_address': hospital.address,
+                'destination_address': request.destination_address,
+                'transference_time': request.transference_time,
+                'driver_name': driver.name,
+                'ambulance_model': ambulance.factory_model,
+                'ambulance_license_plate': ambulance.license_plate
+            }
+            result.append(offer_data)
+
 
     return jsonify(result)
 
@@ -503,11 +523,13 @@ def get_provider_scheduled_requests(providerId):
             .filter(Request.status=='scheduled').all()
     result = []
     for offer in offers:
-        request = Request.query.get(offer.request_id)
-        hospital = Hospital.query.get(request.hospital_id)
+        request_item = Request.query.get(offer.request_id)
+        hospital = Hospital.query.get(request_item.hospital_id)
         ambulance = Ambulance.query.get(offer.ambulance_id)
         driver = Driver.query.get(offer.driver_id)
+        patient = Patient.query.get(request_item.patient_id)
         offer_data = {
+            'id': request_item.id,
             'ambulance_type': request_item.ambulance_type,
             'origin_name': hospital.name,
             'origin_address': hospital.address,
@@ -542,11 +564,13 @@ def get_provider_ongoing_requests(providerId):
             .filter((Request.status=='ongoing') | (Request.status=='patient_collected')).all()
     result = []
     for offer in offers:
-        request = Request.query.get(offer.request_id)
-        hospital = Hospital.query.get(request.hospital_id)
+        request_item = Request.query.get(offer.request_id)
+        hospital = Hospital.query.get(request_item.hospital_id)
         ambulance = Ambulance.query.get(offer.ambulance_id)
         driver = Driver.query.get(offer.driver_id)
+        patient = Patient.query.get(request_item.patient_id)
         request_data = {
+            'id': request_item.id,
             'ambulance_type': request_item.ambulance_type,
             'origin_name': hospital.name,
             'origin_address': hospital.address,
@@ -568,18 +592,18 @@ def get_provider_ongoing_requests(providerId):
             'driver_name': driver.name,
             'ambulance_model': ambulance.factory_model,
             'ambulance_license_plate': ambulance.license_plate,
-            'status': request.status
+            'status': request_item.status
         }
         result.append(request_data)
 
     return jsonify(result)
 
 # Conclude a request
-@app.route('/provider/<int:providerId>/request/<int:requestId>/conclude', methods=['PATCH'])
-def set_request_concluded(providerId, requestId):
+@app.route('/provider/<int:providerId>/request/<int:requestId>/<newStatus>', methods=['PATCH'])
+def set_request_concluded(providerId, requestId, newStatus):
     request = Request.query.get(requestId)
     if (request):
-        request.status = 'finished'
+        request.status = newStatus
         db.session.commit()
         return Response(status=200)
 
@@ -593,35 +617,38 @@ def get_provider_concluded_requests(providerId):
             .filter(Request.status=='finished').all()
     result = []
     for offer in offers:
-        request = Request.query.get(offer.request_id)
-        hospital = Hospital.query.get(request.hospital_id)
-        ambulance = Ambulance.query.get(offer.ambulance_id)
+        request_item = Request.query.get(offer.request_id)
+        hospital = Hospital.query.get(request_item.hospital_id)
         driver = Driver.query.get(offer.driver_id)
-        request_data = {
-            'ambulance_type': request_item.ambulance_type,
-            'origin_name': hospital.name,
-            'origin_address': hospital.address,
-            'destination_name': request_item.destination_name,
-            'destination_address': request_item.destination_address,
-            'description': request_item.description,
-            'transference_time': request_item.transference_time,
-            'created': request_item.created,
-            'responsible_name': request_item.responsible_name,
-            'responsible_phone': request_item.responsible_phone,
-            'patient_name': patient.name,
-            'patient_age': patient.age,
-            'patient_gender': patient.gender,
-            'patient_clinical_condition': patient.clinical_condition,
-            'patient_phone': patient.phone,
-            'patient_observations': patient.observations,
-            'provider_name': provider.name,
-            'price': offer.price,
-            'driver_name': driver.name,
-            'ambulance_model': ambulance.factory_model,
-            'ambulance_license_plate': ambulance.license_plate,
-            'avaliation': request.avaliation
-        }
-        result.append(request_data)
+        patient = Patient.query.get(request_item.patient_id)
+        ambulance = Ambulance.query.get(offer.ambulance_id)
+        if ambulance:
+            request_data = {
+                'id': request_item.id,
+                'ambulance_type': request_item.ambulance_type,
+                'origin_name': hospital.name,
+                'origin_address': hospital.address,
+                'destination_name': request_item.destination_name,
+                'destination_address': request_item.destination_address,
+                'description': request_item.description,
+                'transference_time': request_item.transference_time,
+                'created': request_item.created,
+                'responsible_name': request_item.responsible_name,
+                'responsible_phone': request_item.responsible_phone,
+                'patient_name': patient.name,
+                'patient_age': patient.age,
+                'patient_gender': patient.gender,
+                'patient_clinical_condition': patient.clinical_condition,
+                'patient_phone': patient.phone,
+                'patient_observations': patient.observations,
+                'provider_name': provider.name,
+                'price': offer.price,
+                'driver_name': driver.name,
+                'ambulance_model': ambulance.factory_model,
+                'ambulance_license_plate': ambulance.license_plate,
+                'avaliation': request_item.avaliation
+            }
+            result.append(request_data)
 
     return jsonify(result)
 

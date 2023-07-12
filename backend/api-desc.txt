@@ -267,8 +267,8 @@ Telas Empresas:
 			status: string	c
 		}]
 
-	/* Conclude a request */
-	PATCH: /provider/{providerId}/request/{resquestId}/conclude
+	/* Update request status */
+	PATCH: /provider/{providerId}/request/{resquestId}/{newStatus}
 
 	
 	/* gets all requests which have accepted offers made by the provider and were concluded */
@@ -316,10 +316,10 @@ pending --|               |-> canceled
 		  				  |-> ongoing -> patient_collected -> "concluded"
 
 
-offer status: "pending", "denied", "accepted", "expired"
+offer status: "pending", "denied", "approved", "expired"
 
 		  |-> denied
 		  |
-pending --|-> accepted
+pending --|-> approved 
 		  |
 		  |-> expired

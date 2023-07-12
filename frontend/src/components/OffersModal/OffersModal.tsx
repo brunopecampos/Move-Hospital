@@ -1,12 +1,14 @@
 import { Stack, Button, Modal, Box, Typography, TextField, hexToRgb } from '@mui/material';
 import { useState } from 'react';
-import { Offer } from '../../types';
+import { Offer, User, Request } from '../../types';
 import { SimpleOffer } from '../SimpleOffer/SimpleOffer';
 
 interface OffersModalProps{
   offers: Offer[]
   open: boolean
   closeModal: () => void
+  user: User
+  request: Request
 }
 
 export const OffersModal = (props: OffersModalProps): React.ReactElement => {
@@ -32,22 +34,25 @@ export const OffersModal = (props: OffersModalProps): React.ReactElement => {
 
   const listRequests = props.offers.map((item, index) => (
     <>
-      <SimpleOffer closeModal={props.closeModal} offer={item} offerIndex={index}></SimpleOffer>
+      <SimpleOffer user={props.user} request={props.request} closeModal={props.closeModal} offer={item} offerIndex={index}></SimpleOffer>
     </>
   ))
 
   return (
        <Modal
           open={props.open}
-          onClose={() => {}}
+          onClose={props.closeModal}
           aria-labelledby="modal-modal-title"
           aria-describedby="modal-modal-description"
         >
           <Box sx={modalStyle}>
-            
+            <> 
             {
-            listRequests
+              props.offers.length > 0 ?
+              listRequests
+              : <></>
             }
+            </>
           </Box>
         </Modal>
   );

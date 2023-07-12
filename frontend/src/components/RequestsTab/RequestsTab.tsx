@@ -2,58 +2,16 @@ import React, {useState, useEffect} from 'react';
 import httpClient from '../../httpClient';
 import { Request, User } from '../../types';
 import Box from '@mui/material/Box';
-import { Button, Container, Stack, Card } from '@mui/material';
+import { Button, Container, Stack, Card, Typography } from '@mui/material';
 import { ThemeContext } from '@emotion/react';
 import { SimpleRequest } from '../SimpleRequest/SimpleRequest';
 import { DashboardHeader } from '../DashboardHeader/DashboardHeader';
 
-
-
-const hResquests: Request[] = [{
-    id: "aaa",
-    description: "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
-    ambulance_type: "aaaa",
-    responsible_name: "aaaaa",
-    created: "2023-07-05 19:11:55.998780",
-    transference_time: "sdf",
-    origin_name: "alksdfjlsd",
-    origin_address: "sdfdlskjf",
-    destination_address: "rua aaaaaaaaaaa numero aaaaaaa",
-    destination_name: "hospital aaaaaaaa",
-    status: "ongoing",
-    patient_name: "aaaa",
-    patient_age: 10,
-    patient_gender: "m",
-    patient_clinical_condition: "blabla",
-    patient_phone: "123123123",
-    patient_observations: "blelble",
-    responsible_phone: "aaaaaaaaa"
-},
-{
-    id: "bbb",
-    description: "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
-    ambulance_type: "bbbb",
-    responsible_name: "bbbbb",
-    created: "2023-07-05 19:11:55.998780",
-    transference_time: "sdf",
-    destination_address: "rua bbbbbbbbbbb numero bbbbbbb",
-    destination_name: "hospital bbbbbbbb",
-    status: "ongoing",
-    patient_name: "aaaa",
-    patient_age: 10,
-    patient_gender: "m",
-    patient_clinical_condition: "blabla",
-    patient_phone: "123123123",
-    patient_observations: "blelble",
-    responsible_phone: "bbbbbbbbb",
-    origin_name: "alksdfjlsd",
-    origin_address: "sdfdlskjf",
-},
-]
-
 export interface RequestsTabProps {
   user: User,
   type: string
+  label: string
+  changeTab: (tab: number) => void
 }
 
 export const RequestsTab = (props: RequestsTabProps): React.ReactElement => {
@@ -85,22 +43,9 @@ export const RequestsTab = (props: RequestsTabProps): React.ReactElement => {
     return user.user_type == "hospital"
   }
 
-  useEffect(() => {
-    (async () => {
-      try {
-        /*const resp = await httpClient.get(createUrl(props.user));
-        setRequests([...resp.data])*/
-      } catch (error) {
-        console.log("Not authenticated or error in request");
-      }
-    })();
-  }, []);
-
-
   const listRequests = requests.map((item, index) => (
     <>
-      <SimpleRequest request={item} isHospital={isHospital(props.user)} type={props.type} ></SimpleRequest>
-      n
+      <SimpleRequest changeTab={props.changeTab} user={props.user} request={item} isHospital={isHospital(props.user)} type={props.type} ></SimpleRequest>
       <hr />
     </>
   ))  
@@ -108,6 +53,7 @@ export const RequestsTab = (props: RequestsTabProps): React.ReactElement => {
   return (
     <Box sx={{
       padding: "50px",
+      minHeight: "600px"
     }}>
       <Container>
         {
@@ -122,9 +68,14 @@ export const RequestsTab = (props: RequestsTabProps): React.ReactElement => {
             fontSize: 20,
             fontWeight: 900,
             color: "#504DA6",
-          }} >Transferências em Andamento:</span>
+          }} >{props.label}:</span>
           {
-            listRequests
+            requests.length > 0 ? listRequests :
+            <div style={{ width: "650px", height: 80, display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start', marginTop: '50px' }}>
+              <Typography id="modal-modal-title" variant="h6" component="h2">
+                Ainda não há nenhuma...
+              </Typography>
+            </div>
           }
         </Card>
       </Container>

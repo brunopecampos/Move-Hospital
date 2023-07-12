@@ -1,13 +1,15 @@
 import { Stack, Button, Modal, Box, Typography, TextField, hexToRgb, InputLabel, Select, MenuItem, SelectChangeEvent } from '@mui/material';
 import { useState } from 'react';
-import { Offer } from '../../types';
+import { Offer, User } from '../../types';
 import { SimpleOffer } from '../SimpleOffer/SimpleOffer';
 import { Ambulance } from '../../types';
+import httpClient from '../../httpClient';
 
 interface CreateOfferModalProps{
   open: boolean
   closeModel: () => void
-  requestId: string | undefined
+  requestId: number | undefined
+  user: User
 }
 
 export const CreateOfferModal = (props: CreateOfferModalProps): React.ReactElement => {
@@ -17,8 +19,20 @@ export const CreateOfferModal = (props: CreateOfferModalProps): React.ReactEleme
   const [driverCpf, setDriverCpf] = useState<string>("")
   const [ambulanceId, setAmbulanceId] = useState<string>("")
   const [ambulanceName, setAmbulanceName] = useState<string>("")
-  const handleSubmit = () => {
-
+  const handleSubmit = async (event: any) => {
+    event.preventDefault();
+    try {
+      const url = "//localhost:5000/provider/" + props.user.id + "/offer/" + props.requestId; 
+      const resp = await httpClient.post(url, {
+        "price": price,
+        "ambulance_id": ambulanceId,
+        "driver_name": driverName,
+        "driver_cpf": driverCpf,
+      });
+      props.closeModel()
+    } catch (error) {
+      alert("Error getting requests")
+    }
   }
 
   const handleChange = (e: SelectChangeEvent) => {
@@ -71,7 +85,7 @@ export const CreateOfferModal = (props: CreateOfferModalProps): React.ReactEleme
           aria-describedby="modal-modal-description"
         >
           <Box sx={modalStyle}>
-            <form onSubmit={() => handleSubmit()}>
+            <form onSubmit={(e) => handleSubmit(e)}>
               <Typography color="white" id="modal-modal-title" variant="h6" component="h2">
                 Detalhes da Oferta:
               </Typography>

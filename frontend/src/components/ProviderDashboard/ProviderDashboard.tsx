@@ -54,6 +54,9 @@ const ProviderDashboard  = (props: ProviderDashboardProps): React.ReactElement =
   const [address, setAddress] = React.useState('');
   const [email, setEmail] = React.useState('');
   const [employee_name, setEmployeeName] = React.useState('');
+  const changeTab = (tab: number) => {
+    setValue(tab)
+  }
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
@@ -90,7 +93,7 @@ const ProviderDashboard  = (props: ProviderDashboardProps): React.ReactElement =
         <Tab label="Transferências em Andamento" {...a11yProps(1)} />
         <Tab label="Novas transferências" {...a11yProps(2)} />
         <Tab label="Suas ofertas" {...a11yProps(3)} />
-        <Tab label="Transferências marcadas" {...a11yProps(4)} />
+        <Tab label="Transferências Agendadas" {...a11yProps(4)} />
         <Tab label="Histórico" {...a11yProps(5)} />
         <Tab label="Meu Perfil" {...a11yProps(6)} />
         <Tab label="Sair" {...a11yProps(7)} onClick={() => props.logout()} />
@@ -99,42 +102,42 @@ const ProviderDashboard  = (props: ProviderDashboardProps): React.ReactElement =
       <TabPanel value={value} index={1}>
         {
           props.user ?
-          <RequestsTab user={props.user} type="ongoing" />
+          <RequestsTab changeTab={changeTab} label="Transfência Ocorrendo Agora" user={props.user} type="ongoing" />
           : <></>
         }
       </TabPanel>
       <TabPanel value={value} index={2}>
         {
           props.user ?
-          <RequestsTab user={props.user} type="pending" />
+          <RequestsTab changeTab={changeTab} label="Novas Transferências" user={props.user} type="pending" />
           : <></>
         }
       </TabPanel>
       <TabPanel value={value} index={3}>
         {
           props.user ?
-          <OffersTab type="accepted" />
+          <OffersTab user={props.user} type="accepted" />
           : <></>
         }
       </TabPanel>
       <TabPanel value={value} index={4}>
         {
           props.user ?
-          <RequestsTab user={props.user} type="scheduled" />
+          <RequestsTab changeTab={changeTab} label="Transferênias Agendadas" user={props.user} type="scheduled" />
           : <></>
         }
       </TabPanel>
       <TabPanel value={value} index={5}>
         {
           props.user ?
-          <RequestsTab user={props.user} type="finished" />
+          <RequestsTab changeTab={changeTab} label="Histórico" user={props.user} type="concluded" />
           : <></>
         }
       </TabPanel>
       <TabPanel value={value} index={6}>
       {
           props.user ?
-          <ProfileForm />
+          <ProfileForm user={props.user} />
           : <></>
         }
       </TabPanel>

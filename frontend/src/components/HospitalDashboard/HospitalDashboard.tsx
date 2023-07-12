@@ -54,6 +54,10 @@ const HospitalDashboard  = (props: HospitalDashboardProps): React.ReactElement =
   const [email, setEmail] = React.useState('');
   const [employee_name, setEmployeeName] = React.useState('');
 
+  const changeTab = (tab: number) => {
+    setValue(tab)
+  }
+
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
   };
@@ -97,35 +101,35 @@ const HospitalDashboard  = (props: HospitalDashboardProps): React.ReactElement =
       <TabPanel value={value} index={1}>
         {
           props.user ?
-          <RequestsTab user={props.user} type="ongoing" />
+          <RequestsTab changeTab={changeTab} label="Transferências em Andamento" user={props.user} type="ongoing" />
           : <></>
         }
       </TabPanel>
       <TabPanel value={value} index={2}>
         {
           props.user ?
-          <RequestsTab user={props.user} type="scheduled" />
+          <RequestsTab changeTab={changeTab} label="Transferências Agendadas" user={props.user} type="scheduled" />
           : <></>
         }
       </TabPanel>
       <TabPanel value={value} index={3}>
         {
           props.user ?
-          <RequestsTab user={props.user} type="pending" />
+          <RequestsTab changeTab={changeTab} label="Transferências Criadas" user={props.user} type="pending" />
           : <></>
         }
       </TabPanel>
       <TabPanel value={value} index={4}>
         {
           props.user ?
-          <RequestsTab user={props.user} type="concluded" />
+          <RequestsTab changeTab={changeTab} label="Histórico" user={props.user} type="concluded" />
           : <></>
         }
       </TabPanel>
       <TabPanel value={value} index={5}>
       {
           props.user ?
-          <ProfileForm />
+          <ProfileForm user={props.user} />
           : <></>
         }
       </TabPanel>
