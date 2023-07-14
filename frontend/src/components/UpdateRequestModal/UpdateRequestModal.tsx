@@ -8,6 +8,7 @@ interface UpdateRequestModalProps{
   closeModal: () => void
   updateStatus: (newStatus: string) => Promise<void>
   request: Request
+  changeTab: (tab: number) => void
 }
 
 export const UpdateRequestModal = (props: UpdateRequestModalProps): React.ReactElement => {
@@ -18,7 +19,7 @@ export const UpdateRequestModal = (props: UpdateRequestModalProps): React.ReactE
     left: '50%',
     transform: 'translate(-50%, -50%)',
     width: 500,
-    bgcolor: 'rgba(80, 77, 166, 0.8)',
+    bgcolor: 'rgba(130, 127, 208, 0.9)',
     border: '2px solid #000',
     boxShadow: 24,
     p: 4,
@@ -39,6 +40,16 @@ export const UpdateRequestModal = (props: UpdateRequestModalProps): React.ReactE
   const handleStatusChange = async () => {
     await props.updateStatus(newStatus(props.request.status))
     props.closeModal()
+    if(props.request.status == "scheduled") {
+      props.changeTab(0)
+    }
+    if(props.request.status == "patient_collected") {
+      props.changeTab(5)
+    }
+    if(props.request.status == "ongoing") {
+      props.changeTab(4);
+      props.changeTab(1)
+    }
   }
 
   return (

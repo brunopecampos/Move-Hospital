@@ -10,6 +10,7 @@ interface CreateOfferModalProps{
   closeModel: () => void
   requestId: number | undefined
   user: User
+  changeTab: (tab: number) => void
 }
 
 export const CreateOfferModal = (props: CreateOfferModalProps): React.ReactElement => {
@@ -30,8 +31,9 @@ export const CreateOfferModal = (props: CreateOfferModalProps): React.ReactEleme
         "driver_cpf": driverCpf,
       });
       props.closeModel()
+      props.changeTab(3)
     } catch (error) {
-      alert("Error getting requests")
+      alert("Error creating reqquest")
     }
   }
 
@@ -70,7 +72,7 @@ export const CreateOfferModal = (props: CreateOfferModalProps): React.ReactEleme
     left: '50%',
     transform: 'translate(-50%, -50%)',
     width: 1000,
-    bgcolor: 'rgba(80, 77, 166, 0.9)',
+    bgcolor: 'rgba(130, 127, 208, 0.9)',
     border: '2px solid #000',
     boxShadow: 24,
     p: 4,

@@ -19,7 +19,6 @@ export interface SimpleRequestProps {
 
 export const SimpleRequest = (props: SimpleRequestProps): React.ReactElement => {
   const [details, setDetails] = useState<Boolean>(false)
-  const [patient, setPatient] = useState<string>("Placeholder")
   const [provider, setProvider] = useState<string>("Placeholder")
 
   const [listOfferModal, setListOfferModal] = useState<boolean>(false)
@@ -61,7 +60,7 @@ export const SimpleRequest = (props: SimpleRequestProps): React.ReactElement => 
   }
 
   const getRequestStatus = (type: String, request: Request): string => {
-    if (type == "pending") return "Aguardando resposta"
+    if (type == "pending") return "Aguardando Propostas"
     if (type == "scheduled") return "Marcado"
     if (type == "concluded") return "Concluída"
     /* Ongoing */
@@ -76,6 +75,8 @@ export const SimpleRequest = (props: SimpleRequestProps): React.ReactElement => 
       const resp = await httpClient.patch(url, {
         "rating": Number(rating)
       });
+      props.changeTab(3)
+      props.changeTab(4)
     } catch (error) {
       alert("Error getting requests")
     }
@@ -86,11 +87,11 @@ export const SimpleRequest = (props: SimpleRequestProps): React.ReactElement => 
       <div style={{ height: 200, width: "100%", display: 'flex', flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center', marginTop: '10px' }}>
         <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'flex-start' }} >
           <img style={{ width: 150, height: 150 }} src={hospital1} alt="Description of the image" />
-          <span style={{ marginTop: "10px", color: "#504DA6", fontWeight: 'bold' }}>{props.request.origin_name}</span>
+          <span style={{ marginTop: "10px", color: "#504DA6", fontWeight: 'bold' }}>{ props.isHospital ? props.request.destination_name : props.request.origin_name}</span>
         </div>
         <div style={{ padding: 10, width: "100%", display: 'flex', flexDirection: 'column', justifyContent: 'flex-start', alignItems: 'flex-start' }} >
           <div style={{ width: "100%", height: 80, display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start', marginTop: '10px' }}>
-            <RequestTextField title="Destino" content={props.request.destination_name} />
+            <RequestTextField title={props.isHospital ? "Origem" : "Destino"} content={props.isHospital ? props.request.origin_name : props.request.destination_name} />
             <RequestTextField title="Hora da Trasferência" content={props.request.transference_time.toString()} />
             <RequestTextField title="Status" content={getRequestStatus(props.type, props.request)} />
           </div>
@@ -101,7 +102,7 @@ export const SimpleRequest = (props: SimpleRequestProps): React.ReactElement => 
                   <>
                     <Button sx={{ backgroundColor: 'red', marginRight: 2 }} variant="contained" onClick={() => { }}>Excluir Transferência</Button>
                     <Button sx={{ backgroundColor: 'green', marginRight: 2 }} variant="contained" onClick={() => handleListOffers()}>Ver Propostas</Button>
-                    <OffersModal user={props.user} request={props.request} open={listOfferModal} closeModal={closeOfferList} offers={offers} />
+                    <OffersModal changeTab={props.changeTab} user={props.user} request={props.request} open={listOfferModal} closeModal={closeOfferList} offers={offers} />
                   </>
                   : props.type == "scheduled" ?
                     <>
@@ -114,7 +115,7 @@ export const SimpleRequest = (props: SimpleRequestProps): React.ReactElement => 
                           props.request.avaliation == null ?
                             <>
                             <TextField
-                              label="Avaliação de 0 a 10"
+                              label="Avaliação de 0 a 5"
                               type="number"
                               required
                               onChange={(e) => { setRating((e.target.value))}}
@@ -146,21 +147,25 @@ export const SimpleRequest = (props: SimpleRequestProps): React.ReactElement => 
                 props.type == "pending" ?
                   <>
                     <Button sx={{ backgroundColor: 'green', marginRight: 1 }} variant="contained" onClick={() => setMakeOfferModal(true)}>Fazer Proposta</Button>
-                    <CreateOfferModal user={props.user} closeModel={closeMakeOffer} requestId={props.request.id} open={makeOfferModal} />
+                    <CreateOfferModal changeTab={props.changeTab} user={props.user} closeModel={closeMakeOffer} requestId={props.request.id} open={makeOfferModal} />
                   </>
                   : props.type == "ongoing" ?
                     <>
                       <Button sx={{ backgroundColor: 'green', marginRight: 1 }} variant="contained" onClick={() => { setUpdateStatusModal(true) }}>Atualizar Status</Button>
-                      <UpdateRequestModal request={props.request} open={updateStatusModal} closeModal={closeUpdateStatus} updateStatus={updateRequestStatus} />
+                      <UpdateRequestModal changeTab={props.changeTab} request={props.request} open={updateStatusModal} closeModal={closeUpdateStatus} updateStatus={updateRequestStatus} />
                     </>
                     : props.type == "scheduled" ?
                       <>
-                        <Button sx={{ backgroundColor: 'green', marginRight: 2 }} variant="contained" onClick={() => { updateRequestStatus("ongoing") }}>Começar Transferência</Button>
-                        <Button sx={{ backgroundColor: 'red', marginRight: 1 }} variant="contained" onClick={() => { }}>Excluir Transferência</Button>
+                        <Button sx={{ backgroundColor: 'green', marginRight: 2 }} variant="contained" onClick={() => { updateRequestStatus("ongoing") }}>Iniciar Transf.</Button>
+                        <Button sx={{ backgroundColor: 'red', marginRight: 1 }} variant="contained" onClick={() => { }}>Excluir Transf.</Button>
                       </>
                       : /* finished */
                       <>
-                        
+                        <Typography style={{
+                            color: '#504DA6',
+                            paddingTop: '10px',
+                            paddingRight: '10px'
+                          }}>{props.request.avaliation ? "Avaliação: " + props.request.avaliation?.toString() : "Ainda não avaliado" }</Typography>
                       </>
             }
             <Button sx={{ backgroundColor: '#504DA6' }} variant="contained" onClick={() => { requestDetails() }}>{details ? "Esconder" : "Detalhes"}</Button>
@@ -172,7 +177,7 @@ export const SimpleRequest = (props: SimpleRequestProps): React.ReactElement => 
           <RequestTextField title="Nome do responsável" content={props.request.responsible_name}></RequestTextField>
           <RequestTextField title="Telefone do Responsável" content={props.request.responsible_phone}></RequestTextField>
           <RequestTextField title="Criação da Transferência" content={props.request.created}></RequestTextField>
-          <RequestTextField title="Tipo de Ambulância" content={provider}></RequestTextField>
+          <RequestTextField title="Tipo de Ambulância" content={props.request.ambulance_type}></RequestTextField>
         </Stack>
 
         <Stack direction="row" height={100} alignItems='center'>

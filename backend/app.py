@@ -226,7 +226,7 @@ def get_ongoing_requests(hospitalId):
     result = []
     for request_item in requests:
         patient = Patient.query.get(request_item.patient_id)
-        offer = Offer.query.filter_by(request_id=request_item.id,status='accepted')
+        offer = Offer.query.filter_by(request_id=request_item.id,status='approved').first()
         provider = Provider.query.get(offer.provider_id)
         driver = Driver.query.get(offer.driver_id)
         ambulance = Ambulance.query.get(offer.ambulance_id)
@@ -268,7 +268,7 @@ def get_concluded_requests(hospitalId):
     result = []
     for request_item in requests:
         patient = Patient.query.get(request_item.patient_id)
-        offer = Offer.query.filter_by(request_id=request_item.id).first()
+        offer = Offer.query.filter_by(request_id=request_item.id, status="approved").first()
         provider = Provider.query.get(offer.provider_id)
         driver = Driver.query.get(offer.driver_id)
         ambulance = Ambulance.query.get(offer.ambulance_id)
@@ -322,6 +322,7 @@ def get_request_offers(hospitalId, requestId):
         offer_data = {
             'id': offer_item.id,
             'provider_name': provider.name,
+            'provider_rating': provider.rating,
             'price': offer_item.price,
             'driver_name': driver.name,
             'created': offer_item.created,
@@ -409,7 +410,7 @@ def get_provider_ambulances(providerId):
 # Get all system's requests
 @app.route('/provider/<int:providerId>/request/pending', methods=['GET'])
 def get_all_requests(providerId):
-    requests = Request.query.all()
+    requests = Request.query.filter_by(status="peding").all()
     result = []
     for request_item in requests:
         patient = Patient.query.get(request_item.patient_id)
@@ -465,7 +466,7 @@ def create_offer(providerId, requestId):
     db.session.add(offer)
     db.session.commit()
 
-    return jsonify({'message': 'Offer created successfully'}), 201
+    return jsonify({'message': 'Offer created successfully'}), 200
 
 # Get pending offers
 @app.route('/provider/<int:providerId>/offer/pending', methods=['GET'])
@@ -519,12 +520,14 @@ def get_denied_expired_offers(providerId):
 @app.route('/provider/<int:providerId>/request/scheduled', methods=['GET'])
 def get_provider_scheduled_requests(providerId):
     provider = Provider.query.get(providerId)
-    offers = Offer.query.filter(Offer.provider_id==providerId).join(Request, Offer.request_id==Request.id)\
+    offers = Offer.query.filter((Offer.provider_id==providerId) & (Offer.status == "approved") ).join(Request, Offer.request_id==Request.id)\
             .filter(Request.status=='scheduled').all()
     result = []
     for offer in offers:
         request_item = Request.query.get(offer.request_id)
         hospital = Hospital.query.get(request_item.hospital_id)
+        print("AMBULANCEID: ")
+        print(offer.ambulance_id)
         ambulance = Ambulance.query.get(offer.ambulance_id)
         driver = Driver.query.get(offer.driver_id)
         patient = Patient.query.get(request_item.patient_id)
@@ -560,7 +563,7 @@ def get_provider_scheduled_requests(providerId):
 @app.route('/provider/<int:providerId>/request/ongoing', methods=['GET'])
 def get_provider_ongoing_requests(providerId):
     provider = Provider.query.get(providerId)
-    offers = Offer.query.filter_by(provider_id=providerId).join(Request, Offer.request_id==Request.id)\
+    offers = Offer.query.filter((Offer.provider_id==providerId) & (Offer.status == "approved")).join(Request, Offer.request_id==Request.id)\
             .filter((Request.status=='ongoing') | (Request.status=='patient_collected')).all()
     result = []
     for offer in offers:

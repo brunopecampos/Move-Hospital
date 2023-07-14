@@ -57,6 +57,7 @@ class Provider(db.Model):
     employee_name = db.Column(db.String, nullable=False)
     email = db.Column(db.String, nullable=False)
     password = db.Column(db.String, nullable=False)
+    rating = db.Column(db.Float, nullable=False, server_default="5.0")
 
 class Ambulance(db.Model):
     __tablename__ = 'ambulance'

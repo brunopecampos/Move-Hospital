@@ -1,7 +1,7 @@
 // ProfileForm.tsx
 
 import React, { useEffect, useState } from 'react';
-import { Typography, TextField, Button, FormGroup, Box } from '@mui/material';
+import { Typography, TextField, Button, FormGroup, Box, Container } from '@mui/material';
 import { Hospital, User } from '../../types';
 import httpClient from '../../httpClient';
 
@@ -50,11 +50,11 @@ export const ProfileForm = (props: ProfileNormProps): React.ReactElement => {
     <Box sx={{
       padding: "50px",
       minHeight: "600px",
-      alignItems: 'center'
     }}>
-      <div style={{ width: "650px", height: 80, display: 'flex', flexDirection: 'column', alignItems: 'flex-start', marginTop: '50px' }}>
-        <Typography variant="h5" style={{ marginBottom: '20px', alignSelf: 'flex-start' }}>Meu perfil</Typography>
-        <form onSubmit={handleSubmit} style={{width: "100%"}}>
+      <Container>
+      <div style={{height: 80, display: 'flex', flexDirection: 'column', alignItems: 'flex-start'}}>
+        <span style={{marginTop: "30px", fontSize: 20, fontWeight: 'bold', width: "100%"}}>Meu Perfil</span>
+        <form onSubmit={handleSubmit} style={{width: "730px", marginTop: "30px"}}>
           <FormGroup>
             <TextField 
               label="Nome do hospital" 
@@ -97,6 +97,7 @@ export const ProfileForm = (props: ProfileNormProps): React.ReactElement => {
           </FormGroup>
         </form>
       </div>
+      </Container>
     </Box>
   );
 };

@@ -2,7 +2,8 @@ import React, {useState, useEffect} from 'react';
 import httpClient from '../../httpClient';
 import { Ambulance, Offer, Request, User } from '../../types';
 import Box from '@mui/material/Box';
-import { Button, Container, Stack, Card, Typography } from '@mui/material';
+import { Button, Container, Stack, Card, Typography, IconButton } from '@mui/material';
+import RefreshIcon from '@mui/icons-material/Refresh';
 import { ThemeContext } from '@emotion/react';
 import { SimpleRequest } from '../SimpleRequest/SimpleRequest';
 import { DashboardHeader } from '../DashboardHeader/DashboardHeader';
@@ -25,6 +26,7 @@ export const OffersTab = (props: OffersTabProps): React.ReactElement => {
     return user.user_type == "hospital"
   }
 
+  const [reload, setReload] = useState<boolean>(false)
   useEffect(() => {
     (async () => {
       try {
@@ -36,7 +38,7 @@ export const OffersTab = (props: OffersTabProps): React.ReactElement => {
         console.log("Not authenticated or error in request");
       }
     })();
-  }, []);
+  }, [reload]);
 
 
   const listOffers = offers.map((item, index) => (
@@ -57,11 +59,16 @@ export const OffersTab = (props: OffersTabProps): React.ReactElement => {
         <Card elevation={3}  sx={{
           padding: 5
         }}>
-          <span style={{
-            fontSize: 20,
-            fontWeight: 900,
-            color: "#504DA6",
-          }} >Ofertas em aberto</span>
+          <div style={{ width: "650px", display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'space-between'}}>
+            <span style={{
+              fontSize: 20,
+              fontWeight: 900,
+              color: "#504DA6",
+            }} >Ofertas em aberto</span>
+            <IconButton onClick={() => setReload(!reload)} color="inherit">
+              <RefreshIcon />
+            </IconButton>
+          </div>
           {
 
             offers.length > 0 ? listOffers :

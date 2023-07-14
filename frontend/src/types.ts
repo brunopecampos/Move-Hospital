@@ -34,6 +34,8 @@ export interface Request {
 
 export interface Offer {
   id?: string;
+  provider_rating?: number
+  provider_name?: string
   hospital_name?: string;
   ambulance_license_place?: string;
   ambulance_model?: string;

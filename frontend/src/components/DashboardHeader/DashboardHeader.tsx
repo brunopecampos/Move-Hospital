@@ -5,6 +5,7 @@ import httpClient from "../../httpClient";
 interface DashboardHeaderProps {
     username: string
     userId: string;
+    changeTab: (tab: number) => void
 }
 
 export const DashboardHeader = (props: DashboardHeaderProps): React.ReactElement => {
@@ -48,7 +49,8 @@ export const DashboardHeader = (props: DashboardHeaderProps): React.ReactElement
 			  "patient_observations": patientObservations,
     });
     handleClose()
-
+    props.changeTab(2)
+    props.changeTab(3)
     } catch (error: any) {
       alert("Erro ao criar transferência");
     }
@@ -60,7 +62,7 @@ export const DashboardHeader = (props: DashboardHeaderProps): React.ReactElement
     left: '50%',
     transform: 'translate(-50%, -50%)',
     width: 1000,
-    bgcolor: 'rgba(80, 77, 166, 0.9)',
+    bgcolor: 'rgba(130, 127, 208, 0.9)',
     border: '2px solid #000',
     boxShadow: 24,
     p: 4,
