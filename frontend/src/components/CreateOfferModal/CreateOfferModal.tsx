@@ -1,13 +1,16 @@
 import { Stack, Button, Modal, Box, Typography, TextField, hexToRgb, InputLabel, Select, MenuItem, SelectChangeEvent } from '@mui/material';
-import { useState } from 'react';
-import { Offer } from '../../types';
+import { useEffect, useState } from 'react';
+import { Offer, User } from '../../types';
 import { SimpleOffer } from '../SimpleOffer/SimpleOffer';
 import { Ambulance } from '../../types';
+import httpClient from '../../httpClient';
 
 interface CreateOfferModalProps{
   open: boolean
   closeModel: () => void
-  requestId: string | undefined
+  requestId: number | undefined
+  user: User
+  changeTab: (tab: number) => void
 }
 
 export const CreateOfferModal = (props: CreateOfferModalProps): React.ReactElement => {
@@ -17,37 +20,50 @@ export const CreateOfferModal = (props: CreateOfferModalProps): React.ReactEleme
   const [driverCpf, setDriverCpf] = useState<string>("")
   const [ambulanceId, setAmbulanceId] = useState<string>("")
   const [ambulanceName, setAmbulanceName] = useState<string>("")
-  const handleSubmit = () => {
-
+  const handleSubmit = async (event: any) => {
+    event.preventDefault();
+    try {
+      const url = "//localhost:5000/provider/" + props.user.id + "/offer/" + props.requestId; 
+      const resp = await httpClient.post(url, {
+        "price": price,
+        "ambulance_id": ambulanceId,
+        "driver_name": driverName,
+        "driver_cpf": driverCpf,
+      });
+      props.closeModel()
+      props.changeTab(3)
+    } catch (error) {
+      alert("Error creating reqquest")
+    }
   }
+
+  const [ambulances, setAmbulances] = useState<Ambulance[]>([])
+  useEffect(() => {
+    if(props.open) {
+      (async () => {
+      try {
+        const url = "//localhost:5000/provider/" + props.user.id + "/ambulance"
+        const resp = await httpClient.get(url);
+        setAmbulances(resp.data)
+      } catch (error) {
+        alert("Error getting ambulances")
+      }
+      })();
+    }
+    
+  }, [props.open]);
 
   const handleChange = (e: SelectChangeEvent) => {
     let id = e.target.value
     setAmbulanceId(id)
-    let ambulance = hardcodedAmbulances.find(ambulance => ambulance.id === id)
+    let ambulance = ambulances.find(ambulance => ambulance.id === id)
     if(ambulance) {
-      setAmbulanceName(ambulance.factory_model + " - " + ambulance.licence_plate) 
-
+      setAmbulanceName(ambulance.factory_model + " - " + ambulance.license_plate) 
     }
   }
 
-  const hardcodedAmbulances: Ambulance[] = [
-    {
-      id: "1",
-      factory_model: "Doblo",
-      licence_plate: "sdf-1358",
-      ambulance_type: "UTI Móvel"
-    },
-    {
-      id: "2",
-      factory_model: "Ducato",
-      licence_plate: "slk-1231",
-      ambulance_type: "UTI Móvel"
-    }
-  ]
-
-  const listAmbulances = hardcodedAmbulances.map((item, index) => (
-      <MenuItem value={item.id}>{item.factory_model + " - " + item.licence_plate}</MenuItem> 
+  const listAmbulances = ambulances.map((item, index) => (
+      <MenuItem value={item.id}>{item.factory_model + " - " + item.license_plate}</MenuItem> 
     ))
 
   const modalStyle = {
@@ -56,7 +72,7 @@ export const CreateOfferModal = (props: CreateOfferModalProps): React.ReactEleme
     left: '50%',
     transform: 'translate(-50%, -50%)',
     width: 1000,
-    bgcolor: 'rgba(80, 77, 166, 0.9)',
+    bgcolor: 'rgba(130, 127, 208, 0.9)',
     border: '2px solid #000',
     boxShadow: 24,
     p: 4,
@@ -71,7 +87,7 @@ export const CreateOfferModal = (props: CreateOfferModalProps): React.ReactEleme
           aria-describedby="modal-modal-description"
         >
           <Box sx={modalStyle}>
-            <form onSubmit={() => handleSubmit()}>
+            <form onSubmit={(e) => handleSubmit(e)}>
               <Typography color="white" id="modal-modal-title" variant="h6" component="h2">
                 Detalhes da Oferta:
               </Typography>

@@ -9,41 +9,25 @@ export interface SimpleOfferProps {
   offer: Offer
   offerIndex: number
   closeModal: () => void
+  request: Request
+  user: User
+  changeTab: (tab: number) => void
 }
 
 export const SimpleOffer = (props: SimpleOfferProps): React.ReactElement => 
 {
-  const acceptOffer = () => {
+  const acceptOffer = async () => {
     /* send request to accept offer */
 
-    props.closeModal()
-  }
+    try {
+      const url = "//localhost:5000/hospital/" + props.user.id + "/request/" + props.request.id + "/offer/" + props.offer.id + "/approve"; 
+      const resp = await httpClient.patch(url);
+      props.closeModal()
+      props.changeTab(2)
+    } catch (error) {
+      alert("Error accepting offer")
+    }
 
-  const checkNewOffers = () : Offer[] => {
-    /* fazer requisição para checar ofertas */
-    return [
-      {
-          code: "aaaaaa",
-          price: 50.00,
-          status: "created",
-          driver_name: "aaaa",
-          ambulance_id: "aaaa"
-      },
-      {
-          code: "bbbbbb",
-          price: 100.00,
-          status: "created",
-          driver_name: "aaaa",
-          ambulance_id: "aaaa"
-      }
-    ]
-  }
-
-  const showOffers = () => {
-    /* make request to accept offer */
-
-    /*  */
-    const offers = checkNewOffers()
   }
 
   return (
@@ -52,10 +36,11 @@ export const SimpleOffer = (props: SimpleOfferProps): React.ReactElement =>
         Proposta {props.offerIndex + 1}
       </Typography>
       <Stack direction="row" spacing={5} height={100} alignItems='center' sx={{backgroundColor: 'white'}}>
-        <OfferTextField title="Empresa" content={props.offer.code} />
+        <OfferTextField title="Empresa" content={props.offer.provider_name} />
+        <OfferTextField title="Avaliação" content={props.offer.provider_rating?.toString()} />
         <OfferTextField title="Valor" content={props.offer.price.toString()} />
-        <OfferTextField title="Distância até ponto de embarque" content={props.offer.status} />
-        <OfferTextField title="Avaliação" content={props.offer.status} />
+        <OfferTextField title="Motorista" content={props.offer.driver_name} />
+        <OfferTextField title="Data de envio" content={props.offer.created?.toString()} />
         <Container sx={{width: 150}}>
           <Button sx={{height: 40, backgroundColor: 'green', paddingTop: "30px", paddingBottom: "30px"}} variant="contained" onClick={() => acceptOffer()}> Aceitar Oferta</Button>
         </Container>
@@ -69,12 +54,12 @@ export const OfferTextField = (props: {title: string, content: string | undefine
     <Container sx={{width: props.width ?? 150}}>
       <p style={{
         fontWeight: 700,
-        fontSize: 11,
+        fontSize: 13,
         wordWrap: 'break-word'
       }}>{props.title}</p>
       <p style={{
         color: 'grey',
-        fontSize: 12,
+        fontSize: 14,
         wordWrap: 'break-word'
       }}>{props.content}</p>
     </Container>

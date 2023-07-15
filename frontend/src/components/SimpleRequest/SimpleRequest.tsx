@@ -2,59 +2,84 @@ import React, { useState, useEffect } from 'react';
 import httpClient from '../../httpClient';
 import { Offer, Request, User } from '../../types';
 import Box from '@mui/material/Box';
-import { Button, Container, Stack, Card } from '@mui/material';
+import { Button, Container, Stack, Card, TextField, Typography } from '@mui/material';
 import { ThemeContext } from '@emotion/react';
 import { OffersModal } from '../OffersModal/OffersModal';
 import { CreateOfferModal } from '../CreateOfferModal/CreateOfferModal';
 import hospital1 from "../../images/hospital1.png"
+import { UpdateRequestModal } from '../UpdateRequestModal/UpdateRequestModal';
 
 export interface SimpleRequestProps {
   request: Request
   isHospital: boolean
   type: String
+  user: User
+  changeTab: (tab: number) => void
 }
-
-
 
 export const SimpleRequest = (props: SimpleRequestProps): React.ReactElement => {
   const [details, setDetails] = useState<Boolean>(false)
-  const [patient, setPatient] = useState<string>("Placeholder")
   const [provider, setProvider] = useState<string>("Placeholder")
 
   const [listOfferModal, setListOfferModal] = useState<boolean>(false)
+  const [offers, setOffers] = useState<Offer[]>([])
   const closeOfferList = () => setListOfferModal(false)
+  const handleListOffers = async () => {
 
-  const [makeOfferModal, setMakeOfferModal] =  useState<boolean>(false)
+    try {
+      const url = "//localhost:5000/hospital/" + props.user.id + "/request/" + props.request.id + "/offer";
+      const resp = await httpClient.get(url);
+      console.log(resp.data)
+      setOffers(resp.data);
+      setListOfferModal(true);
+    } catch (error) {
+      alert("Error getting requests")
+    }
+
+  }
+
+  const [updateStatusModal, setUpdateStatusModal] = useState<boolean>(false)
+  const closeUpdateStatus = () => setUpdateStatusModal(false)
+  const updateRequestStatus = async (newStatus: string) => {
+    try {
+      const url = "//localhost:5000/provider/" + props.user.id + "/request/" + props.request.id + "/" + newStatus;
+      const resp = await httpClient.patch(url);
+      if (newStatus == "finished") props.changeTab(5)
+      else if (newStatus == "ongoing") props.changeTab(1)
+    } catch (error) {
+      alert("Error getting requests")
+    }
+  }
+
+  const [makeOfferModal, setMakeOfferModal] = useState<boolean>(false)
   const closeMakeOffer = () => setMakeOfferModal(false)
 
-  const [offers, setOffers] = useState<Offer[]> ([
-    {
-        code: "aaaaaa",
-        price: 50.00,
-        status: "created",
-        driver_name: "aaaa",
-        ambulance_id: "aaaa"
-    },
-    {
-        code: "bbbbbb",
-        price: 100.00,
-        status: "created",
-        driver_name: "aaaa",
-        ambulance_id: "aaaa"
-    }
-  ])
 
   const requestDetails = () => {
     setDetails(!details)
   }
 
   const getRequestStatus = (type: String, request: Request): string => {
-    if (type == "pending") return "Aguardando resposta"
+    if (type == "pending") return "Aguardando Propostas"
     if (type == "scheduled") return "Marcado"
-    if (type == "finished") return "concuida"
+    if (type == "concluded") return "Concluída"
     /* Ongoing */
     if (request.status == "ongoing") return "Buscando paciente"
     return "Paciente Coletado"
+  }
+
+  const [rating, setRating] = useState<string>("")
+  const avaliate = async (rating: string) => {
+    try {
+      const url = "//localhost:5000/hospital/" + props.user.id + "/request/" + props.request.id;
+      const resp = await httpClient.patch(url, {
+        "rating": Number(rating)
+      });
+      props.changeTab(3)
+      props.changeTab(4)
+    } catch (error) {
+      alert("Error getting requests")
+    }
   }
 
   return (
@@ -62,45 +87,88 @@ export const SimpleRequest = (props: SimpleRequestProps): React.ReactElement => 
       <div style={{ height: 200, width: "100%", display: 'flex', flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center', marginTop: '10px' }}>
         <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'flex-start' }} >
           <img style={{ width: 150, height: 150 }} src={hospital1} alt="Description of the image" />
-          <span style={{ marginTop: "10px", color: "#504DA6", fontWeight: 'bold' }}>{props.request.origin_name}</span>
+          <span style={{ marginTop: "10px", color: "#504DA6", fontWeight: 'bold' }}>{ props.isHospital ? props.request.destination_name : props.request.origin_name}</span>
         </div>
-        <div style={{padding: 10, width: "100%", display: 'flex', flexDirection: 'column', justifyContent: 'flex-start', alignItems: 'flex-start' }} >
-          <div style={{width: "100%",  height: 80, display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start', marginTop: '10px'}}>
-            <RequestTextField title="Destino" content={props.request.destination_name} />
+        <div style={{ padding: 10, width: "100%", display: 'flex', flexDirection: 'column', justifyContent: 'flex-start', alignItems: 'flex-start' }} >
+          <div style={{ width: "100%", height: 80, display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start', marginTop: '10px' }}>
+            <RequestTextField title={props.isHospital ? "Origem" : "Destino"} content={props.isHospital ? props.request.origin_name : props.request.destination_name} />
             <RequestTextField title="Hora da Trasferência" content={props.request.transference_time.toString()} />
             <RequestTextField title="Status" content={getRequestStatus(props.type, props.request)} />
           </div>
-          <div style={{width: "100%",  height: 80, display: 'flex', flexDirection: 'row', justifyContent: 'flex-end', alignItems: 'flex-start', marginTop: '40px'}}>
+          <div style={{ width: "100%", height: 80, display: 'flex', flexDirection: 'row', justifyContent: 'flex-end', alignItems: 'flex-start', marginTop: '40px' }}>
             {
               props.isHospital ?
                 props.type == "pending" ?
                   <>
-                    <Button sx={{backgroundColor: 'red', marginRight: 2}} variant="contained" onClick={() => {}}>Excluir Transferência</Button>
-                    <Button sx={{backgroundColor: 'green', marginRight: 2}} variant="contained" onClick={() => setListOfferModal(true)}>Ver Propostas</Button>
-                    <OffersModal open={listOfferModal} closeModal={closeOfferList} offers={offers} />
+                    <Button sx={{ backgroundColor: 'red', marginRight: 2 }} variant="contained" onClick={() => { }}>Excluir Transferência</Button>
+                    <Button sx={{ backgroundColor: 'green', marginRight: 2 }} variant="contained" onClick={() => handleListOffers()}>Ver Propostas</Button>
+                    <OffersModal changeTab={props.changeTab} user={props.user} request={props.request} open={listOfferModal} closeModal={closeOfferList} offers={offers} />
                   </>
                   : props.type == "scheduled" ?
-                      <Button sx={{backgroundColor: 'red', marginRight: 2}} variant="contained" onClick={() => {}}>Excluir Transferência</Button>
+                    <>
+                      <Button sx={{ backgroundColor: 'red', marginRight: 2 }} variant="contained" onClick={() => { }}>Excluir Transferência</Button>
+                    </>
                     : props.type == "ongoing" ?
-                      <Button sx={{backgroundColor: 'green', marginRight: 2}} variant="contained" onClick={() => {}}>Ver Localização</Button>
-                      : <></>
+                      <Button sx={{ backgroundColor: 'green', marginRight: 2 }} variant="contained" onClick={() => { }}>Ver Localização</Button>
+                      : <>
+                          {
+                          props.request.avaliation == null ?
+                            <>
+                            <TextField
+                              label="Avaliação de 0 a 5"
+                              type="number"
+                              required
+                              onChange={(e) => { setRating((e.target.value))}}
+                              style={{
+                                borderRadius: '8px',
+                                fontSize: '4px',
+                                paddingRight: '10px',
+                              }}
+                              variant="outlined"
+                              color='primary'
+                              size='small'
+                            />
+                            
+                              <Button sx={{ backgroundColor: 'green', marginRight: 2 }} variant="contained" onClick={() => { avaliate(rating)}}>Avaliar</Button>
+                            </>
+                            
+                            : <>
+                            <Typography style={{
+                              color: '#504DA6',
+                              paddingTop: '10px',
+                              paddingRight: '10px'
+                            }}>Avaliação: {props.request.avaliation}</Typography>
+                            </>
+                            
+                          }
+                        </>
 
-              :
+                :
                 props.type == "pending" ?
                   <>
-                    <Button sx={{backgroundColor: 'green', marginRight: 1}} variant="contained" onClick={() => setMakeOfferModal(true)}>Fazer Proposta</Button>
-                    <CreateOfferModal closeModel={closeMakeOffer} requestId='kasdf' open={makeOfferModal} />
+                    <Button sx={{ backgroundColor: 'green', marginRight: 1 }} variant="contained" onClick={() => setMakeOfferModal(true)}>Fazer Proposta</Button>
+                    <CreateOfferModal changeTab={props.changeTab} user={props.user} closeModel={closeMakeOffer} requestId={props.request.id} open={makeOfferModal} />
                   </>
                   : props.type == "ongoing" ?
                     <>
-                      <Button sx={{backgroundColor: 'green', marginRight: 1}} variant="contained" onClick={() => {}}>Atualizar Status</Button>
-                      <Button sx={{backgroundColor: 'green', marginRight: 1}} variant="contained" onClick={() => {}}>Atualizar Localização</Button>
+                      <Button sx={{ backgroundColor: 'green', marginRight: 1 }} variant="contained" onClick={() => { setUpdateStatusModal(true) }}>Atualizar Status</Button>
+                      <UpdateRequestModal changeTab={props.changeTab} request={props.request} open={updateStatusModal} closeModal={closeUpdateStatus} updateStatus={updateRequestStatus} />
                     </>
                     : props.type == "scheduled" ?
-                      <Button sx={{backgroundColor: 'red', marginRight: 1}} variant="contained" onClick={() => {}}>Cancelar Transferência</Button>
-                      : <></>
+                      <>
+                        <Button sx={{ backgroundColor: 'green', marginRight: 2 }} variant="contained" onClick={() => { updateRequestStatus("ongoing") }}>Iniciar Transf.</Button>
+                        <Button sx={{ backgroundColor: 'red', marginRight: 1 }} variant="contained" onClick={() => { }}>Excluir Transf.</Button>
+                      </>
+                      : /* finished */
+                      <>
+                        <Typography style={{
+                            color: '#504DA6',
+                            paddingTop: '10px',
+                            paddingRight: '10px'
+                          }}>{props.request.avaliation ? "Avaliação: " + props.request.avaliation?.toString() : "Ainda não avaliado" }</Typography>
+                      </>
             }
-            <Button sx={{backgroundColor: '#504DA6'}} variant="contained" onClick={() => { requestDetails() }}>{details ? "Esconder" : "Detalhes"}</Button>
+            <Button sx={{ backgroundColor: '#504DA6' }} variant="contained" onClick={() => { requestDetails() }}>{details ? "Esconder" : "Detalhes"}</Button>
           </div>
         </div>
       </div>
@@ -108,8 +176,8 @@ export const SimpleRequest = (props: SimpleRequestProps): React.ReactElement => 
         <Stack direction="row" height={100} alignItems='center'>
           <RequestTextField title="Nome do responsável" content={props.request.responsible_name}></RequestTextField>
           <RequestTextField title="Telefone do Responsável" content={props.request.responsible_phone}></RequestTextField>
-          <RequestTextField title="Criação da Transferência" content={props.request.created.toDateString()}></RequestTextField>
-          <RequestTextField title="Tipo de Ambulância" content={provider}></RequestTextField>
+          <RequestTextField title="Criação da Transferência" content={props.request.created}></RequestTextField>
+          <RequestTextField title="Tipo de Ambulância" content={props.request.ambulance_type}></RequestTextField>
         </Stack>
 
         <Stack direction="row" height={100} alignItems='center'>
@@ -153,23 +221,6 @@ export const SimpleRequest = (props: SimpleRequestProps): React.ReactElement => 
         }
       </> : <></>
       }
-
-      {/*<div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'center', marginTop: '10px', height: '50px' }}>
-        <Button sx={{ height: 40, marginRight: '10px' }} variant="contained" onClick={() => requestDetails()}>{details ? "Esconder" : "Detalhes"}</Button>
-        {
-          props.isHospital ?
-            props.type == "pending" ?
-              <OffersModal requestId={props.request.id} />
-              :
-              <></>
-            :
-            props.type == "pending" ?
-              <CreateOfferModal requestId='kasdf' />
-              :
-              <></>
-        }
-      </div>*/}
-
     </>
   );
 }

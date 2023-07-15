@@ -19,7 +19,7 @@ Hospital:
 	
 
 	/* Gets newly created requests of status "pending" OK */
-	GET: /hospital/{hospitalId}/request/created
+	GET: /hospital/{hospitalId}/request/pending
 		output: json: [{
 			ambulance_type: string,
 			origin_name: string,
@@ -147,7 +147,7 @@ Hospital:
 
 Telas Empresas:
 
-	/*  create an ambulance */
+	/*  create an ambulance OK */
 	POST: /provider/{providerId}/ambulance/
 		input: json: {
 			factory_model: string,
@@ -155,7 +155,7 @@ Telas Empresas:
 			ambulance_type: string,
 		}
 	
-	/* get provider's ambulances */
+	/* get provider's ambulances OK */
 	GET: /provider/{providerId}/ambulance
 		output: json: [
 			{
@@ -167,7 +167,7 @@ Telas Empresas:
 		]
 
 	/* Gets all requests in the system OK */
-	GET: /provider/{provider_id}/request/created
+	GET: /provider/{provider_id}/request/pending
 		output: json: [ {
 			ambulance_type: string,
 			origin_name: string,
@@ -182,7 +182,7 @@ Telas Empresas:
 			patient_observations: string,
 		} ]
 
-	/* creates an offer for a request */
+	/* creates an offer for a request OK */
 	POST: /provider/{providerId}/offer/{requestId}
 		input: json: {
 			price: real,
@@ -191,7 +191,7 @@ Telas Empresas:
 			driver_cpf: string;
 		}
 
-	/* gets pending offers */
+	/* gets pending offers OK */
 	GET: /provider/{providerId}/offer/pending
 		output: json {
 			price: real,
@@ -267,8 +267,8 @@ Telas Empresas:
 			status: string	c
 		}]
 
-	/* Conclude a request */
-	PATCH: /provider/{providerId}/request/{resquestId}/conclude
+	/* Update request status */
+	PATCH: /provider/{providerId}/request/{resquestId}/{newStatus}
 
 	
 	/* gets all requests which have accepted offers made by the provider and were concluded */
@@ -308,18 +308,18 @@ Telas Empresas:
 			email: string
 		}
 
-request status: "peding", "expired", "scheduled", "canceled", "ongoing", "patient_collected", "finished"
+request status: "peding", "expired", "scheduled", "canceled", "ongoing", "patient_collected", ""concluded""
 
 	      |-> expired
 pending --|               |-> canceled
 		  |-> scheduled --|
-		  				  |-> ongoing -> patient_collected -> finished
+		  				  |-> ongoing -> patient_collected -> "concluded"
 
 
-offer status: "pending", "denied", "accepted", "expired"
+offer status: "pending", "denied", "approved", "expired"
 
 		  |-> denied
 		  |
-pending --|-> accepted
+pending --|-> approved 
 		  |
 		  |-> expired
