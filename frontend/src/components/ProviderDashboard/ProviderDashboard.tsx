@@ -6,8 +6,9 @@ import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import { RequestsTab } from '../RequestsTab/RequestsTab';
 import { User, Hospital } from '../../types';
-import { ProfileForm } from '../ProfileForm/Profile';
+import { ProfileTab } from '../ProfileTab/ProfileTab';
 import { OffersTab } from '../OfferTab/OfferTab';
+import { FleetTab } from '../FleetTab/FleetTab';
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -95,8 +96,9 @@ const ProviderDashboard  = (props: ProviderDashboardProps): React.ReactElement =
         <Tab label="Suas ofertas" {...a11yProps(3)} />
         <Tab label="Transferências Agendadas" {...a11yProps(4)} />
         <Tab label="Histórico" {...a11yProps(5)} />
-        <Tab label="Meu Perfil" {...a11yProps(6)} />
-        <Tab label="Sair" {...a11yProps(7)} onClick={() => props.logout()} />
+        <Tab label="Minha Frota" {...a11yProps(6)} />
+        <Tab label="Meu Perfil" {...a11yProps(7)} />
+        <Tab label="Sair" {...a11yProps(8)} onClick={() => props.logout()} />
       </Tabs>
       <TabPanel value={value} index={0}></TabPanel>
       <TabPanel value={value} index={1}>
@@ -135,13 +137,21 @@ const ProviderDashboard  = (props: ProviderDashboardProps): React.ReactElement =
         }
       </TabPanel>
       <TabPanel value={value} index={6}>
-      {
+        {
           props.user ?
-          <ProfileForm user={props.user} />
+            <FleetTab user={props.user} changeTab={changeTab} />
+          :
+            <></>
+        }
+      </TabPanel>
+      <TabPanel value={value} index={7}>
+        {
+          props.user ?
+            <ProfileTab user={props.user} />
           : <></>
         }
       </TabPanel>
-      <TabPanel value={value} index={7}></TabPanel>
+      <TabPanel value={value} index={8}></TabPanel>
     </Box>
   );
 }

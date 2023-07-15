@@ -40,9 +40,6 @@ export const UpdateRequestModal = (props: UpdateRequestModalProps): React.ReactE
   const handleStatusChange = async () => {
     await props.updateStatus(newStatus(props.request.status))
     props.closeModal()
-    if(props.request.status == "scheduled") {
-      props.changeTab(0)
-    }
     if(props.request.status == "patient_collected") {
       props.changeTab(5)
     }

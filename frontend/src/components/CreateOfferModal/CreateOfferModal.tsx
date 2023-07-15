@@ -1,5 +1,5 @@
 import { Stack, Button, Modal, Box, Typography, TextField, hexToRgb, InputLabel, Select, MenuItem, SelectChangeEvent } from '@mui/material';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Offer, User } from '../../types';
 import { SimpleOffer } from '../SimpleOffer/SimpleOffer';
 import { Ambulance } from '../../types';
@@ -37,33 +37,33 @@ export const CreateOfferModal = (props: CreateOfferModalProps): React.ReactEleme
     }
   }
 
+  const [ambulances, setAmbulances] = useState<Ambulance[]>([])
+  useEffect(() => {
+    if(props.open) {
+      (async () => {
+      try {
+        const url = "//localhost:5000/provider/" + props.user.id + "/ambulance"
+        const resp = await httpClient.get(url);
+        setAmbulances(resp.data)
+      } catch (error) {
+        alert("Error getting ambulances")
+      }
+      })();
+    }
+    
+  }, [props.open]);
+
   const handleChange = (e: SelectChangeEvent) => {
     let id = e.target.value
     setAmbulanceId(id)
-    let ambulance = hardcodedAmbulances.find(ambulance => ambulance.id === id)
+    let ambulance = ambulances.find(ambulance => ambulance.id === id)
     if(ambulance) {
-      setAmbulanceName(ambulance.factory_model + " - " + ambulance.licence_plate) 
-
+      setAmbulanceName(ambulance.factory_model + " - " + ambulance.license_plate) 
     }
   }
 
-  const hardcodedAmbulances: Ambulance[] = [
-    {
-      id: "1",
-      factory_model: "Doblo",
-      licence_plate: "sdf-1358",
-      ambulance_type: "UTI Móvel"
-    },
-    {
-      id: "2",
-      factory_model: "Ducato",
-      licence_plate: "slk-1231",
-      ambulance_type: "UTI Móvel"
-    }
-  ]
-
-  const listAmbulances = hardcodedAmbulances.map((item, index) => (
-      <MenuItem value={item.id}>{item.factory_model + " - " + item.licence_plate}</MenuItem> 
+  const listAmbulances = ambulances.map((item, index) => (
+      <MenuItem value={item.id}>{item.factory_model + " - " + item.license_plate}</MenuItem> 
     ))
 
   const modalStyle = {

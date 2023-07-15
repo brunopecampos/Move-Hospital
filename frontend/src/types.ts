@@ -53,7 +53,7 @@ export interface Offer {
 export interface Ambulance {
   id: string;
   factory_model: string;
-  licence_plate: string;
+  license_plate: string;
   ambulance_type: string;
 }
 

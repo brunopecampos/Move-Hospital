@@ -367,7 +367,7 @@ def get_hospital_profile(hospitalId):
 ###### PROVIDER ENDPOINTS ######
 
 # Create an ambulance
-@app.route('/provider/<int:providerId>/ambulance/', methods=['POST'])
+@app.route('/provider/<int:providerId>/ambulance', methods=['POST'])
 def create_ambulance(providerId):
     data = request.get_json()
 
@@ -410,7 +410,7 @@ def get_provider_ambulances(providerId):
 # Get all system's requests
 @app.route('/provider/<int:providerId>/request/pending', methods=['GET'])
 def get_all_requests(providerId):
-    requests = Request.query.filter_by(status="peding").all()
+    requests = Request.query.filter_by(status="pending").all()
     result = []
     for request_item in requests:
         patient = Patient.query.get(request_item.patient_id)

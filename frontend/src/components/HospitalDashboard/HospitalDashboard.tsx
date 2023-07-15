@@ -6,7 +6,7 @@ import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import { RequestsTab } from '../RequestsTab/RequestsTab';
 import { User, Hospital } from '../../types';
-import { ProfileForm } from '../ProfileForm/Profile';
+import { ProfileTab } from '../ProfileTab/ProfileTab';
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -129,7 +129,7 @@ const HospitalDashboard  = (props: HospitalDashboardProps): React.ReactElement =
       <TabPanel value={value} index={5}>
       {
           props.user ?
-          <ProfileForm user={props.user} />
+          <ProfileTab user={props.user} />
           : <></>
         }
       </TabPanel>

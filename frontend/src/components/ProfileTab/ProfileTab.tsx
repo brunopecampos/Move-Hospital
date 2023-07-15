@@ -9,7 +9,7 @@ interface ProfileNormProps  {
   user: User;
 }
 
-export const ProfileForm = (props: ProfileNormProps): React.ReactElement => {
+export const ProfileTab = (props: ProfileNormProps): React.ReactElement => {
   const [name, setName] = useState('');
   const [cnpj, setCnpj] = useState('');
   const [address, setAddress] = useState('');

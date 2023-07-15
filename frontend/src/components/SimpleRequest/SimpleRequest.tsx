@@ -45,7 +45,7 @@ export const SimpleRequest = (props: SimpleRequestProps): React.ReactElement => 
       const url = "//localhost:5000/provider/" + props.user.id + "/request/" + props.request.id + "/" + newStatus;
       const resp = await httpClient.patch(url);
       if (newStatus == "finished") props.changeTab(5)
-      else if (newStatus == "ongoing") props.changeTab(2)
+      else if (newStatus == "ongoing") props.changeTab(1)
     } catch (error) {
       alert("Error getting requests")
     }
